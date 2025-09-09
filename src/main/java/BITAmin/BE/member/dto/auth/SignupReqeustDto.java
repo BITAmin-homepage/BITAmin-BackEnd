@@ -1,6 +1,8 @@
 package BITAmin.BE.member.dto.auth;
 import BITAmin.BE.member.entity.Member;
 import BITAmin.BE.member.enums.Role;
+import lombok.Getter;
+
 
 public record SignupReqeustDto(
         String name,
