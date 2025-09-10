@@ -1,0 +1,56 @@
+package BITAmin.BE.member.service;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import BITAmin.BE.global.exception.CustomException;
+import BITAmin.BE.global.exception.ErrorCode;
+import BITAmin.BE.global.util.RedisClient;
+import BITAmin.BE.member.dto.member.MemberResponseDto;
+import BITAmin.BE.member.dto.member.MemberSearchCondition;
+import BITAmin.BE.member.dto.member.MemberStatsDto;
+import BITAmin.BE.member.enums.Role;
+import BITAmin.BE.member.repository.MemberMapper;
+import BITAmin.BE.member.repository.MemberQueryRepository;
+import BITAmin.BE.member.repository.MemberRepository;
+import BITAmin.BE.member.dto.member.UpdateMemberRequestDto;
+import BITAmin.BE.member.entity.Member;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+
+@Service
+@RequiredArgsConstructor
+public class MemberService {
+    private final MemberRepository memberRepository;
+    private final MemberMapper memberMapper;
+    private final RedisClient redisClient;
+    private final MemberQueryRepository memberQueryRepository;
+    public void updateMember(Long memberId, UpdateMemberRequestDto dto){
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        memberMapper.updateFromDto(dto, member);
+        memberRepository.save(member);
+    }
+    public Page<MemberResponseDto> searchMembers(MemberSearchCondition condition, int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "memberId"));
+        Page<Member> members = memberQueryRepository.searchByCondition(condition, pageable);
+        return members.map(member -> new MemberResponseDto(member, member.getMemberId(), page));
+    }
+    public void deleteMember(Long memberId){
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        memberRepository.delete(member);
+        redisClient.deleteValue("RefreshToken:"+member.getUsername());
+    }
+
+    public MemberStatsDto getMemberStats(){
+        int total = (int) memberRepository.count();
+        int memberTotal = memberRepository.countByRole(Role.MEMBER);
+        int adminTotal = memberRepository.countByRole(Role.ADMIN);
+        int cohortTotal = memberRepository.countDistinctCohort();
+        return new MemberStatsDto(total, memberTotal, adminTotal, cohortTotal);
+    }
+}

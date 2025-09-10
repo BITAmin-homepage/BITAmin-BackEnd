@@ -13,7 +13,11 @@ public enum ErrorCode {
     FORBIDDEN(HttpStatus.FORBIDDEN, 403, "권한이 없습니다."),
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, 404, "리소스를 찾을 수 없습니다."),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, 405, "비밀번호가 올바르지 않습니다."),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "서버 에러입니다.");
+
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "서버 에러입니다."),
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, 501, "만료된 토큰입니다."),
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 502, "지원하지 않는 형식의 토큰입니다."),
+    INVALID_SIGNATURE(HttpStatus.UNAUTHORIZED, 503, "서명이 일치하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final int code;

@@ -4,13 +4,12 @@ import BITAmin.BE.global.exception.CustomException;
 import BITAmin.BE.global.exception.ErrorCode;
 import BITAmin.BE.global.security.JwtProvider;
 import BITAmin.BE.global.util.RedisClient;
-import BITAmin.BE.member.MemberRepository;
+import BITAmin.BE.member.repository.MemberRepository;
 import BITAmin.BE.member.dto.auth.LoginRequestDto;
 import BITAmin.BE.member.dto.auth.SignupReqeustDto;
 import BITAmin.BE.member.dto.auth.UserResponseDto;
 import BITAmin.BE.member.entity.Member;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +39,4 @@ public class AuthService {
         UserResponseDto userResponseDto = UserResponseDto.from(member, accessToken);
         return userResponseDto;
     }
-
 }

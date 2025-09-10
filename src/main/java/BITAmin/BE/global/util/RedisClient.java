@@ -18,6 +18,9 @@ public class RedisClient {
         ValueOperations<String, Object> values = redisTemplate.opsForValue();
         values.set(key, value, Duration.ofMinutes(timeout));
     }
+    public void deleteValue(String key) {
+        redisTemplate.delete(key);
+    }
 
     public String getValue(String key) {
         ValueOperations<String, Object> values = redisTemplate.opsForValue();
