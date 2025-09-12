@@ -54,10 +54,10 @@ public class JwtProvider {
     }
     public String extractAccessToken(HttpServletRequest request) {
         String bearer = request.getHeader("Authorization");
-        if (bearer != null && bearer.startsWith("Bearer ")) {
-            return bearer.substring(7);
+        if (bearer == null || !bearer.startsWith("Bearer ")) {
+            return null;
         }
-        throw new CustomException(ErrorCode.UNAUTHORIZED);
+        return bearer.substring(7);
     }
     public String getUsername(String token) {
         try {

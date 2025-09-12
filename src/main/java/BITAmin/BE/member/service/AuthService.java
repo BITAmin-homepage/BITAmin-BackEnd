@@ -31,7 +31,7 @@ public class AuthService {
         memberRepository.save(member);
     }
     public UserResponseDto login(LoginRequestDto dto){
-        Member member = memberRepository.findByUsername(dto.username())
+        Member member = memberRepository.findByEmail(dto.username())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         String accessToken = jwtProvider.createAccessToken(member);
         String refreshToken = jwtProvider.createRefreshToken(member);

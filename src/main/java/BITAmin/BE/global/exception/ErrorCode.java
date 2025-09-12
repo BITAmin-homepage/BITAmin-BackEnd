@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, 401, "인증이 필요합니다."),
-
     NOT_FOUND(HttpStatus.NOT_FOUND, 402, "해당 사용자를 찾을 수 없습니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, 403, "권한이 없습니다."),
     RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, 404, "리소스를 찾을 수 없습니다."),
@@ -17,7 +16,10 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "서버 에러입니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, 501, "만료된 토큰입니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 502, "지원하지 않는 형식의 토큰입니다."),
-    INVALID_SIGNATURE(HttpStatus.UNAUTHORIZED, 503, "서명이 일치하지 않습니다.");
+    INVALID_SIGNATURE(HttpStatus.UNAUTHORIZED, 503, "서명이 일치하지 않습니다."),
+
+    FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 600, "파일 업로드에 실패했습니다.");
+
 
     private final HttpStatus httpStatus;
     private final int code;

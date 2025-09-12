@@ -24,22 +24,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CustomUserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         String token = jwtProvider.extractAccessToken(request);
-        Claims claims = null;
-        try{
-            claims=jwtProvider.validateToken(token);
-        } catch (CustomException e){
+        if (token == null) {
             filterChain.doFilter(request, response);
             return;
         }
-        String username = claims.getSubject();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities()
-        );
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        try {
+            Claims claims = jwtProvider.validateToken(token);
+            String email = claims.getSubject();
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            Authentication auth = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        } catch (CustomException e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         filterChain.doFilter(request, response);
     }
 }
