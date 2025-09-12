@@ -21,6 +21,7 @@ public class S3Service {
     private String bucketName;
     private final S3Client s3Client;
 
+
     public String uploadFile(MultipartFile file, String folder) {
         try {
             String fileName = folder + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
