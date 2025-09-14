@@ -35,7 +35,7 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProjectInfoDto>> getProjects(
+    public ResponseEntity<ApiResponse<List<ProjectInfoDto>>> getProjects(
             @RequestParam(required = false) String cohort,
             @RequestParam(required = false) Period period,
             @RequestParam(required = false) Award award
@@ -44,6 +44,6 @@ public class ProjectController {
         List<ProjectInfoDto> response = projects.stream()
                 .map(ProjectInfoDto::fromEntity)
                 .toList();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success("프로젝트 검색 완료", response));
     }
 }
