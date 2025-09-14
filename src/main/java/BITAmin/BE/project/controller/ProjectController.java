@@ -2,12 +2,17 @@ package BITAmin.BE.project.controller;
 
 import BITAmin.BE.global.dto.ApiResponse;
 import BITAmin.BE.project.dto.ProjectInfoDto;
+import BITAmin.BE.project.entity.Project;
+import BITAmin.BE.project.enums.Award;
+import BITAmin.BE.project.enums.Period;
 import BITAmin.BE.project.service.ProjectService;
 import BITAmin.BE.project.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,5 +32,18 @@ public class ProjectController {
     public ResponseEntity<ApiResponse<ProjectInfoDto>> uploadFileInfo(@RequestBody ProjectInfoDto dto){
         ProjectInfoDto response = projectService.uploadFileInfo(dto);
         return ResponseEntity.ok(ApiResponse.success("프로젝트 업로드 성공", response));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProjectInfoDto>> getProjects(
+            @RequestParam(required = false) String cohort,
+            @RequestParam(required = false) Period period,
+            @RequestParam(required = false) Award award
+    ) {
+        List<Project> projects = projectService.searchProjects(cohort, period, award);
+        List<ProjectInfoDto> response = projects.stream()
+                .map(ProjectInfoDto::fromEntity)
+                .toList();
+        return ResponseEntity.ok(response);
     }
 }

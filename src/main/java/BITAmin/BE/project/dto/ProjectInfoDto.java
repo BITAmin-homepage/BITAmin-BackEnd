@@ -30,4 +30,18 @@ public record ProjectInfoDto(
                 .duration(this.duration)
                 .build();
     }
+
+    public static ProjectInfoDto fromEntity(Project project) {
+        return new ProjectInfoDto(
+                project.getProjectId(),
+                project.getTitle(),
+                project.getCategory(),
+                project.getDescription(),
+                project.getCohort(),
+                project.getPeriod(),
+                project.getAward(),
+                project.getMember(),
+                project.getDuration()
+        );
+    }
 }
