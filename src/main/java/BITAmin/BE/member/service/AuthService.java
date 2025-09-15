@@ -28,6 +28,7 @@ public class AuthService {
     public void signup(SignupReqeustDto dto){
         String encodedPassword = passwordEncoder.encode(dto.password());
         Member member=dto.toEntity(encodedPassword);
+        member.setStatusPending();
         memberRepository.save(member);
     }
     public UserResponseDto login(LoginRequestDto dto){

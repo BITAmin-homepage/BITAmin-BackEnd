@@ -42,8 +42,13 @@ public class MemberController {
         ApiResponse<Page<MemberResponseDto>> response = ApiResponse.success("페이징 완료",result);
         return ResponseEntity.ok(response);
     }
-
-    @PutMapping("/{memberId}")
+    @PutMapping("/status/{memberId}")
+    public ResponseEntity<ApiResponse<String>> memberStatus(@PathVariable Long memberId){
+        memberService.approveMember(memberId);
+        return ResponseEntity
+                .ok(ApiResponse.success("멤버 승인 완료", null));
+    }
+    @PutMapping("/update/{memberId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<String>> updateMember(@PathVariable Long memberId, @RequestBody UpdateMemberRequestDto dto) {
         memberService.updateMember(memberId, dto);

@@ -1,4 +1,5 @@
 package BITAmin.BE.member.service;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -41,6 +42,12 @@ public class MemberService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         memberRepository.delete(member);
         redisClient.deleteValue("RefreshToken:"+member.getUsername());
+    }
+    @Transactional
+    public void approveMember(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        member.setStatusApprove();
     }
 
     public MemberStatsDto getMemberStats(){

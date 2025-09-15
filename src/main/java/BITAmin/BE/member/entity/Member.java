@@ -1,6 +1,7 @@
 package BITAmin.BE.member.entity;
 
 import BITAmin.BE.member.enums.Role;
+import BITAmin.BE.member.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,4 +26,12 @@ public class Member {
     private Role role;
     private String username;
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    public void setStatusPending() {
+        this.status = Status.PENDING;
+    }
+    public void setStatusApprove() {
+        this.status = Status.APPROVED;
+    }
 }
