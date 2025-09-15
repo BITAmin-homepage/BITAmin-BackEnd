@@ -20,6 +20,7 @@ import java.util.List;
 public class ProjectController {
     private final S3Service s3Service;
     private final ProjectService projectService;
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(
             @RequestParam("file") MultipartFile file,
@@ -27,6 +28,11 @@ public class ProjectController {
     ) {
         String url = s3Service.uploadFile(file, type);
         return ResponseEntity.ok(url);
+    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteFile(@RequestParam String key) {
+        s3Service.deleteFile(key);
+        return ResponseEntity.ok("파일 삭제 완료: " + key);
     }
     @PostMapping("/uploadInfo")
     public ResponseEntity<ApiResponse<ProjectInfoDto>> uploadFileInfo(@RequestBody ProjectInfoDto dto){
@@ -45,5 +51,13 @@ public class ProjectController {
                 .map(ProjectInfoDto::fromEntity)
                 .toList();
         return ResponseEntity.ok(ApiResponse.success("프로젝트 검색 완료", response));
+    }
+    @PutMapping("/{projectId}")
+    public ResponseEntity<ApiResponse<ProjectInfoDto>> updateProject(
+            @PathVariable Long projectId,
+            @RequestBody ProjectInfoDto dto) {
+
+        ProjectInfoDto response = projectService.updateProject(projectId, dto);
+        return ResponseEntity.ok(ApiResponse.success("프로젝트 수정 성공", response));
     }
 }

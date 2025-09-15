@@ -1,5 +1,6 @@
 package BITAmin.BE.project.entity;
 
+import BITAmin.BE.project.dto.ProjectInfoDto;
 import BITAmin.BE.project.enums.Award;
 import BITAmin.BE.project.enums.Period;
 import jakarta.persistence.Entity;
@@ -26,4 +27,15 @@ public class Project {
     private Award award;
     private String member;
     private LocalDate duration;
+
+    public void update(ProjectInfoDto dto) {
+        this.title = dto.title();
+        this.category = dto.category();
+        this.description = dto.description();
+        this.cohort = dto.cohort();
+        this.period = dto.period();
+        this.award = dto.award();
+        this.member = dto.member();
+        this.duration = dto.duration();
+    }
 }
