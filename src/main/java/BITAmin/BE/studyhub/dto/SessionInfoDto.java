@@ -9,7 +9,6 @@ public record SessionInfoDto(
         String description,
         String detail
 ) {
-    // Entity → DTO 변환
     public static SessionInfoDto fromEntity(Session session) {
         return new SessionInfoDto(
                 session.getSessionId(),
@@ -20,7 +19,6 @@ public record SessionInfoDto(
         );
     }
 
-    // DTO → Entity 변환
     public Session toEntity(SessionInfoDto dto) {
         return Session.builder()
                 .sessionId(dto.sessionId)

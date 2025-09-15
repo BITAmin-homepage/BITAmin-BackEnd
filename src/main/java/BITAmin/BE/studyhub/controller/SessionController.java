@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/session")
 public class SessionController {
     private final SessionService sessionService;
-    @PostMapping("/uploadInfo")
+    @PostMapping()
     public ResponseEntity<ApiResponse<SessionInfoDto>> uploadSession(@RequestBody SessionInfoDto dto){
         SessionInfoDto response = sessionService.uploadSession(dto);
         return ResponseEntity.ok(ApiResponse.success("프로젝트 업로드 성공", response));
