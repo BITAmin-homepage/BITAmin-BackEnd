@@ -29,10 +29,11 @@ public class ProjectController {
         String url = s3Service.uploadFile(file, type);
         return ResponseEntity.ok(url);
     }
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteFile(@RequestParam String key) {
+    @DeleteMapping("/{projectId}/file")
+    public ResponseEntity<String> deleteFile(@PathVariable Long projectId, @RequestParam String key) {
         s3Service.deleteFile(key);
-        return ResponseEntity.ok("파일 삭제 완료: " + key);
+        projectService.deleteProject(projectId);
+        return ResponseEntity.ok("프로젝트 삭제 완료: " + key);
     }
     @PostMapping("/uploadInfo")
     public ResponseEntity<ApiResponse<ProjectInfoDto>> uploadFileInfo(@RequestBody ProjectInfoDto dto){

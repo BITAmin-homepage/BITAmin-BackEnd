@@ -18,8 +18,8 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 502, "지원하지 않는 형식의 토큰입니다."),
     INVALID_SIGNATURE(HttpStatus.UNAUTHORIZED, 503, "서명이 일치하지 않습니다."),
 
-    FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 600, "파일 업로드에 실패했습니다.");
-
+    FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 600, "파일 업로드에 실패했습니다."),
+    DB_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, 601, "해당 id와 일치하는 객체가 없습니다.");
 
     private final HttpStatus httpStatus;
     private final int code;
