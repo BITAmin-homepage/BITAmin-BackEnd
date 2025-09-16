@@ -2,10 +2,14 @@ package BITAmin.BE.studyhub.controller;
 
 import BITAmin.BE.global.dto.ApiResponse;
 import BITAmin.BE.studyhub.dto.AssignInfoDto;
+import BITAmin.BE.studyhub.entity.Assignment;
+import BITAmin.BE.studyhub.enums.TaskType;
 import BITAmin.BE.studyhub.service.AssignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,5 +37,16 @@ public class AssignmentController {
     public ResponseEntity<String> deleteAssignment(@PathVariable Long assignmentId) {
         assignService.deleteAssignment(assignmentId);
         return ResponseEntity.ok("과제 삭제 완료: " + assignmentId);
+    }
+    // 전체 과제
+    @GetMapping
+    public ResponseEntity<List<Assignment>> getAllAssignments() {
+        return ResponseEntity.ok(assignService.getAllAssignments());
+    }
+
+    // 특정 타입 과제 (예습, 복습)
+    @GetMapping("/type/{type}")
+    public ResponseEntity<List<Assignment>> getAssignmentsByType(@PathVariable TaskType type) {
+        return ResponseEntity.ok(assignService.getAssignmentsByType(type));
     }
 }

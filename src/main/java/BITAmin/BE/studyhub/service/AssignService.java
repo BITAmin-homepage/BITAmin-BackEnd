@@ -5,9 +5,12 @@ import BITAmin.BE.global.exception.ErrorCode;
 import BITAmin.BE.global.generic.GenericService;
 import BITAmin.BE.studyhub.dto.AssignInfoDto;
 import BITAmin.BE.studyhub.entity.Assignment;
+import BITAmin.BE.studyhub.enums.TaskType;
 import BITAmin.BE.studyhub.repository.AssignRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class AssignService {
@@ -38,4 +41,13 @@ public class AssignService {
                 .orElseThrow(() -> new CustomException(ErrorCode.DB_NOT_FOUND));
         service.delete(assignmentId);
     }
+    @Transactional(readOnly = true)
+    public List<Assignment> getAllAssignments() {
+        return assignRepository.findAll();
+    }
+    @Transactional(readOnly = true)
+    public List<Assignment> getAssignmentsByType(TaskType type) {
+        return assignRepository.findByType(type);
+    }
+
 }

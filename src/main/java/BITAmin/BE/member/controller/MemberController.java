@@ -33,7 +33,6 @@ public class MemberController {
                 .body(ApiResponse.success("멤버 추가 완료", null));
     }
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<MemberResponseDto>>> getMembers(
             @ModelAttribute MemberSearchCondition condition,
             @RequestParam(defaultValue="0") int page

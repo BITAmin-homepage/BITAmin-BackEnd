@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/session")
@@ -29,6 +31,15 @@ public class SessionController {
     public ResponseEntity<String> deleteSession(@PathVariable Long sessionId){
         sessionService.deleteSession(sessionId);
         return ResponseEntity.ok("프로젝트 삭제 완료: " + sessionId);
+    }
+    @GetMapping
+    public ResponseEntity<List<SessionInfoDto>> getSessions(
+            @RequestParam(required = false) String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return ResponseEntity.ok(sessionService.getAllSessions());
+        } else {
+            return ResponseEntity.ok(sessionService.searchSessions(keyword));
+        }
     }
 
 }

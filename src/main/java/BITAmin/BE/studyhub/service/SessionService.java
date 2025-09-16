@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SessionService {
     private final GenericService<Session, SessionInfoDto> service;
@@ -38,5 +40,17 @@ public class SessionService {
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.DB_NOT_FOUND));
         service.delete(sessionId);
+    }
+
+    public List<SessionInfoDto> getAllSessions() {
+        return sessionRepository.findAll()
+                .stream().map(Session::toDto)
+                .toList();
+    }
+
+    public List<SessionInfoDto> searchSessions(String keyword) {
+        return sessionRepository.findByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword)
+                .stream().map(Session::toDto)
+                .toList();
     }
 }
