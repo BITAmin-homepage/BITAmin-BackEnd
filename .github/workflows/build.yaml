@@ -31,6 +31,8 @@ jobs:
           printf "%s\n" "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
           echo "===== application.properties 확인 ====="
           cat ./src/main/resources/application.properties
+          echo "===== resources 폴더 확인 ====="
+          ls -al ./src/main/resources
 
       # JAR 빌드
       - name: Build with Gradle
@@ -40,4 +42,4 @@ jobs:
       - name: Check JAR contents
         run: |
           jar tf build/libs/*.jar | grep application.properties || echo "application.properties not found"
-
+          jar tf build/libs/*.jar | grep BOOT-INF/classes/
