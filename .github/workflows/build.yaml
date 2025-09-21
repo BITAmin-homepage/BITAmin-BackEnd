@@ -28,7 +28,7 @@ jobs:
       - name: application.properties setting
         run: |
           cd ./src/main/resources
-          cat <<EOF > application.properties
+          cat <<'EOF' > application.properties
           ${{ secrets.APPLICATION_PROPERTIES }}
           EOF
 
