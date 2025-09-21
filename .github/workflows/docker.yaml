@@ -42,5 +42,4 @@ jobs:
             docker stop be-app || true
             docker rm be-app || true
             docker run -d --name be-app -p 8080:8080 \
-              -e SPRING_PROFILES_ACTIVE=prod \
               ${{ secrets.DOCKER_USERNAME }}/be-app:latest
