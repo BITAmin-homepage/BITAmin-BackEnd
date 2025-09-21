@@ -27,8 +27,10 @@ jobs:
 
       - name: application.properties setting
         run: |
-          cd ./src/main/resources
-          printf "%s" "${{ secrets.APPLICATION_PROPERTIES }}" > application.properties
+          mkdir -p ./src/main/resources
+          printf "%s\n" "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
+          echo "===== application.properties 확인 ====="
+          cat ./src/main/resources/application.properties
 
       - name: Build with Gradle
         run: ./gradlew build -x test
