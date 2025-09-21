@@ -39,3 +39,5 @@ out/
 ### properties ###
 /src/main/resources/application.properties
 application.properties
+/src/main/resources/application-env.properties
+application-env.properties

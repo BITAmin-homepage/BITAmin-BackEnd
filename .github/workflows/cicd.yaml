@@ -18,6 +18,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
       ## gradle 설정
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -29,14 +30,19 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build -x test
 
+      - name: application.properties setting
+        run: |
+          cd ./src/main/resources
+          touch ./application.properties
+          echo "${{ secrets.APPLICATION_PROPERTIES}}" > ./application.properties
+        shell: bash
 
-
-      - name: Copy JAR to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ec2-user
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "build/libs/BE-0.0.1-SNAPSHOT.jar"
-          target: "/home/ec2-user/jar/"
+#      - name: Copy JAR to EC2
+#        uses: appleboy/scp-action@v0.1.7
+#        with:
+#          host: ${{ secrets.SSH_HOST }}
+#          username: ec2-user
+#          key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          source: "build/libs/BE-0.0.1-SNAPSHOT.jar"
+#          target: "/home/ec2-user/jar/"
 
