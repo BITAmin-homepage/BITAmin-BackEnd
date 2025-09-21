@@ -28,9 +28,7 @@ jobs:
       - name: application.properties setting
         run: |
           cd ./src/main/resources
-          cat <<'EOF' > application.properties
-          ${{ secrets.APPLICATION_PROPERTIES }}
-          EOF
+          printf "%s" "${{ secrets.APPLICATION_PROPERTIES }}" > application.properties
 
       - name: Build with Gradle
         run: ./gradlew build -x test
