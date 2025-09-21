@@ -32,6 +32,12 @@ jobs:
           echo "===== application.properties 확인 ====="
           cat ./src/main/resources/application.properties
 
+      # JAR 빌드
       - name: Build with Gradle
-        run: ./gradlew build -x test
+        run: ./gradlew clean build -x test
+
+      # 빌드된 JAR에 application.properties 포함됐는지 확인
+      - name: Check JAR contents
+        run: |
+          jar tf build/libs/*.jar | grep application.properties || echo "application.properties not found"
 
