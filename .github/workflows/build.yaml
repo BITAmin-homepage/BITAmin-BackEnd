@@ -21,21 +21,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           cache-disabled: false
-
       - name: Grant execute permission
         run: chmod +x ./gradlew
 
-      # properties 관리
-      - name: make application.properties
-        run: |
-          mkdir -p src/main/resources
-          printf "%s\n" "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
       # JAR 빌드
       - name: Build with Gradle
         run: ./gradlew clean build -x test
-
-      # 빌드된 JAR에 application.properties 포함됐는지 확인
-      - name: Check JAR contents
-        run: |
-          jar tf build/libs/*.jar | grep "application.properties"
-          jar tf build/libs/*.jar | grep "BOOT-INF/classes/"

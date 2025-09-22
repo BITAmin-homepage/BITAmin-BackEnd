@@ -42,4 +42,6 @@ jobs:
             docker stop be-app || true
             docker rm be-app || true
             docker run -d --name be-app -p 8080:8080 \
+              -v /home/ubuntu/application.properties:/config/application.properties \
+              -e SPRING_CONFIG_LOCATION=file:/config/application.properties \
               ${{ secrets.DOCKER_USERNAME }}/be-app:latest
