@@ -28,10 +28,9 @@ jobs:
       # properties 관리
       - name: make application.properties
         run: |
-          cd ./src/main/resources
-          touch ./application.properties                                      
-          echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./application.properties
-        shell: bash
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
+
       # JAR 빌드
       - name: Build with Gradle
         run: ./gradlew clean build -x test
@@ -39,5 +38,5 @@ jobs:
       # 빌드된 JAR에 application.properties 포함됐는지 확인
       - name: Check JAR contents
         run: |
-          jar tf build/libs/*.jar | grep application.properties || echo "application.properties not found"
-          jar tf build/libs/*.jar | grep BOOT-INF/classes/
+          jar tf build/libs/*.jar | grep "application.properties"
+          jar tf build/libs/*.jar | grep "BOOT-INF/classes/"
