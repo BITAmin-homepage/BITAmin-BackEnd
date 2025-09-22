@@ -29,8 +29,7 @@ jobs:
       - name: make application.properties
         run: |
           mkdir -p src/main/resources
-          echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
-
+          printf "%s\n" "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
       # JAR 빌드
       - name: Build with Gradle
         run: ./gradlew clean build -x test
