@@ -41,3 +41,5 @@ out/
 application.properties
 /src/main/resources/application-env.properties
 application-env.properties
+/src/main/resources/application-gitsecret.properties
+application-gitsecret.properties
