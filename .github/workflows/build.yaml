@@ -25,15 +25,13 @@ jobs:
       - name: Grant execute permission
         run: chmod +x ./gradlew
 
-      - name: application.properties setting
+      # properties 관리
+      - name: make application.properties
         run: |
-          mkdir -p ./src/main/resources
-          printf "%s\n" "${{ secrets.APPLICATION_PROPERTIES }}" > ./src/main/resources/application.properties
-          echo "===== application.properties 확인 ====="
-          cat ./src/main/resources/application.properties
-          echo "===== resources 폴더 확인 ====="
-          ls -al ./src/main/resources
-
+          cd ./src/main/resources
+          touch ./application.properties                                      
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" > ./application.properties
+        shell: bash
       # JAR 빌드
       - name: Build with Gradle
         run: ./gradlew clean build -x test
