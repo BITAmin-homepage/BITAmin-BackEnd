@@ -28,7 +28,9 @@ public class Member {
     private String password;
     @Enumerated(EnumType.STRING)
     private Status status;
+    @Column(nullable=true)
     private String link1;
+    @Column(nullable=true)
     private String link2;
     public void setStatusPending() {
         this.status = Status.PENDING;
