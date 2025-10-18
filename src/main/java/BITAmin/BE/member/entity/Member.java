@@ -28,6 +28,8 @@ public class Member {
     private String password;
     @Enumerated(EnumType.STRING)
     private Status status;
+    private String link1;
+    private String link2;
     public void setStatusPending() {
         this.status = Status.PENDING;
     }

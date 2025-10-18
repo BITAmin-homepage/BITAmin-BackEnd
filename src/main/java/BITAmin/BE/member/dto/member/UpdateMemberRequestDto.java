@@ -10,6 +10,8 @@ public record UpdateMemberRequestDto(
         String phone,
         String email,
         Long cohort,
-        Role role
+        Role role,
+        String link1,
+        String link2
 ) {
 }

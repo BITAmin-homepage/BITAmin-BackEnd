@@ -48,7 +48,6 @@ public class MemberController {
                 .ok(ApiResponse.success("멤버 승인 완료", null));
     }
     @PutMapping("/update/{memberId}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<String>> updateMember(@PathVariable Long memberId, @RequestBody UpdateMemberRequestDto dto) {
         memberService.updateMember(memberId, dto);
         return ResponseEntity
