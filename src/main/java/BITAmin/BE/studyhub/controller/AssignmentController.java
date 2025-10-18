@@ -38,7 +38,7 @@ public class AssignmentController {
         assignService.deleteAssignment(assignmentId);
         return ResponseEntity.ok("과제 삭제 완료: " + assignmentId);
     }
-    // 전체 과제 보기
+    // 전체 과제
     @GetMapping
     public ResponseEntity<List<Assignment>> getAllAssignments() {
         return ResponseEntity.ok(assignService.getAllAssignments());
