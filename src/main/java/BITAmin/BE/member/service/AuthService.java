@@ -34,6 +34,12 @@ public class AuthService {
         member.setStatusPending();
         memberRepository.save(member);
     }
+
+    /**
+     * status(pending, approved)확인, pw일치 확인
+     * @param dto
+     * @return
+     */
     public UserResponseDto login(LoginRequestDto dto){
         Member member = memberRepository.findByUsername(dto.username())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
