@@ -36,7 +36,7 @@ public class AuthService {
     }
 
     /**
-     * status(pending, approved)확인, pw일치 확인
+     * status(pending, approved)확인, pw 일치
      * @param dto
      * @return
      */
