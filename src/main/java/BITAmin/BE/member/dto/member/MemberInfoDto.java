@@ -8,6 +8,9 @@ import BITAmin.BE.member.enums.Status;
 public record MemberInfoDto(
         Long memberId,
         String name,
+        String gender,
+        String birthDate,
+        String phone,
         String email,
         String school,
         Long cohort,
@@ -18,6 +21,9 @@ public record MemberInfoDto(
         return new MemberInfoDto(
                 member.getMemberId(),
                 member.getName(),
+                member.getGender(),
+                member.getBirthDate(),
+                member.getPhone(),
                 member.getEmail(),
                 member.getSchool(),
                 member.getCohort(),
