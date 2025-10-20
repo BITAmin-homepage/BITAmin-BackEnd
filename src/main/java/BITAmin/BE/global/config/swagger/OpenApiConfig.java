@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(title = "BITAmin API", version = "v1"),
         servers = {
-                @Server(url = "http://52.78.66.115:8080", description = "EC2")
+                @Server(url = "http://bitamin.ai.kr:8080", description = "EC2 Server")
         }
 )
 @SecurityScheme(
