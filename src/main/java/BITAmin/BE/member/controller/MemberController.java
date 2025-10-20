@@ -63,6 +63,7 @@ public class MemberController {
         return ResponseEntity
                 .ok(ApiResponse.success("삭제 완료", null));
     }
+    // 통계 확인
     @GetMapping("/stats")
     public ResponseEntity<ApiResponse<MemberStatsDto>> getMemberStats() {
         MemberStatsDto stats = memberService.getMemberStats();
