@@ -1,4 +1,6 @@
 package BITAmin.BE.member.service;
+import BITAmin.BE.member.dto.member.*;
+import BITAmin.BE.member.enums.Status;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -6,18 +8,16 @@ import org.springframework.data.domain.Sort;
 import BITAmin.BE.global.exception.CustomException;
 import BITAmin.BE.global.exception.ErrorCode;
 import BITAmin.BE.global.util.RedisClient;
-import BITAmin.BE.member.dto.member.MemberResponseDto;
-import BITAmin.BE.member.dto.member.MemberSearchCondition;
-import BITAmin.BE.member.dto.member.MemberStatsDto;
 import BITAmin.BE.member.enums.Role;
 import BITAmin.BE.member.repository.MemberMapper;
 import BITAmin.BE.member.repository.MemberRepositoryCustom;
 import BITAmin.BE.member.repository.MemberRepository;
-import BITAmin.BE.member.dto.member.UpdateMemberRequestDto;
 import BITAmin.BE.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -32,10 +32,16 @@ public class MemberService {
         memberMapper.updateFromDto(dto, member);
         memberRepository.save(member);
     }
-    public Page<MemberResponseDto> searchMembers(MemberSearchCondition condition, int page) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "memberId"));
-        Page<Member> members = memberRepository.searchByCondition(condition, pageable);
-        return members.map(member -> new MemberResponseDto(member, member.getMemberId(), page));
+    public List<MemberInfoDto> getMembersByStatus(List<Status> statusList) {
+        List<Member> members;
+        if (statusList == null || statusList.isEmpty()) {
+            members = memberRepository.findAll();
+        } else {
+            members = memberRepository.findByStatusIn(statusList);
+        }
+        return members.stream()
+                .map(MemberInfoDto::fromEntity)
+                .toList();
     }
     public void deleteMember(Long memberId){
         Member member = memberRepository.findByMemberId(memberId)

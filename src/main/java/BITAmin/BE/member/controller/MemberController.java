@@ -2,11 +2,9 @@ package BITAmin.BE.member.controller;
 
 import BITAmin.BE.global.dto.ApiResponse;
 import BITAmin.BE.member.dto.auth.SignupReqeustDto;
-import BITAmin.BE.member.dto.member.MemberResponseDto;
-import BITAmin.BE.member.dto.member.MemberSearchCondition;
-import BITAmin.BE.member.dto.member.MemberStatsDto;
-import BITAmin.BE.member.dto.member.UpdateMemberRequestDto;
+import BITAmin.BE.member.dto.member.*;
 import BITAmin.BE.member.entity.Member;
+import BITAmin.BE.member.enums.Status;
 import BITAmin.BE.member.service.AuthService;
 import BITAmin.BE.member.service.MemberService;
 import lombok.Getter;
@@ -16,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
@@ -33,14 +34,15 @@ public class MemberController {
                 .body(ApiResponse.success("멤버 추가 완료", null));
     }
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<MemberResponseDto>>> getMembers(
-            @ModelAttribute MemberSearchCondition condition,
-            @RequestParam(defaultValue="0") int page
-            ) {
-        Page<MemberResponseDto> result = memberService.searchMembers(condition, page);
-        ApiResponse<Page<MemberResponseDto>> response = ApiResponse.success("페이징 완료",result);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<MemberInfoDto>>> getMembersByStatus(
+            @RequestParam(required = false) List<Status> status
+    ) {
+        List<MemberInfoDto> members = memberService.getMembersByStatus(status);
+        ApiResponse<List<MemberInfoDto>> response = ApiResponse.success("회원 상태별 조회 완료", members);
         return ResponseEntity.ok(response);
     }
+    @GetMapping
     @PutMapping("/status/{memberId}")
     public ResponseEntity<ApiResponse<String>> memberStatus(@PathVariable Long memberId){
         memberService.approveMember(memberId);
