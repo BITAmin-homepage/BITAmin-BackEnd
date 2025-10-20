@@ -42,7 +42,7 @@ public class MemberController {
         ApiResponse<List<MemberInfoDto>> response = ApiResponse.success("회원 상태별 조회 완료", members);
         return ResponseEntity.ok(response);
     }
-    @GetMapping
+
     @PutMapping("/status/{memberId}")
     public ResponseEntity<ApiResponse<String>> memberStatus(@PathVariable Long memberId){
         memberService.approveMember(memberId);
