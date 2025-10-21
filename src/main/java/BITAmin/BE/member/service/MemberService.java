@@ -21,11 +21,13 @@ import java.util.List;
 
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
     private final RedisClient redisClient;
+
     public void updateMember(Long memberId, UpdateMemberRequestDto dto){
         Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));

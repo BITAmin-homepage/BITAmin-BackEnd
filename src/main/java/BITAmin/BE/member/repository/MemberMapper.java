@@ -5,8 +5,9 @@ import BITAmin.BE.member.entity.Member;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface MemberMapper {
     //@Mapping(target = "name", ignore = true)
     void updateFromDto(UpdateMemberRequestDto dto, @MappingTarget Member member);
