@@ -32,6 +32,7 @@ public class MemberService {
         Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         memberMapper.updateFromDto(dto, member);
+        System.out.println("member link1 확인: "+member.getLink1());
         memberRepository.save(member);
     }
     public List<MemberInfoDto> getMembersByStatus(List<Status> statusList) {
