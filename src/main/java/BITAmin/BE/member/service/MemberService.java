@@ -1,6 +1,7 @@
 package BITAmin.BE.member.service;
 import BITAmin.BE.member.dto.member.*;
 import BITAmin.BE.member.enums.Status;
+import BITAmin.BE.member.repository.AgedMemberRepository;
 import jakarta.transaction.Transactional;
 import BITAmin.BE.global.exception.CustomException;
 import BITAmin.BE.global.exception.ErrorCode;
@@ -10,6 +11,8 @@ import BITAmin.BE.member.repository.MemberRepository;
 import BITAmin.BE.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final AgedMemberRepository agedMemberRepository;
     private final RedisClient redisClient;
 
     public MemberInfoDto getMemberInfo(Long memberId){
@@ -26,8 +30,9 @@ public class MemberService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         return MemberInfoDto.fromEntity(member);
     }
-    public List<MemberIntro> getMemberIntroduce(){
-        return memberRepository.findAll().stream()
+    public List<MemberIntro> getMemberIntroduce() {
+        // 일반 Member에서
+        List<MemberIntro> normalMembers = memberRepository.findAll().stream()
                 .map(member -> new MemberIntro(
                         member.getCohort(),
                         member.getName(),
@@ -36,6 +41,24 @@ public class MemberService {
                         member.getDepart()
                 ))
                 .collect(Collectors.toList());
+
+        // AgedMember에서
+        List<MemberIntro> agedMembers = agedMemberRepository.findAll().stream()
+                .map(aged -> new MemberIntro(
+                        aged.getCohort(),
+                        aged.getName(),
+                        aged.getLink1(),
+                        aged.getLink2(),
+                        aged.getDepart()
+                ))
+                .collect(Collectors.toList());
+
+        // 두 리스트 합치기
+        List<MemberIntro> allMembers = new ArrayList<>();
+        allMembers.addAll(normalMembers);
+        allMembers.addAll(agedMembers);
+
+        return allMembers;
     }
     public void updateMember(Long memberId, UpdateMemberRequestDto dto){
         Member member = memberRepository.findByMemberId(memberId)
