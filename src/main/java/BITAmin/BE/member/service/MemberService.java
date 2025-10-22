@@ -28,7 +28,7 @@ public class MemberService {
         //MemberMapper 오류로 인한 수동 setter
         member.setName(dto.name());
         member.setGender(dto.gender());
-        member.setBirthDate(dto.getBirthDate());
+        member.setBirthDate(dto.birthDate());
         member.setSchool(dto.school());
         member.setPhone(dto.phone());
         member.setEmail(dto.email());

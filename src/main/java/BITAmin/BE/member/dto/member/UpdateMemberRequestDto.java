@@ -4,8 +4,6 @@ import BITAmin.BE.member.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 public record UpdateMemberRequestDto(
         String name,
         String gender,
