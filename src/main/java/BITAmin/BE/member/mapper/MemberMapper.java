@@ -9,7 +9,5 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface MemberMapper {
-    @Mapping(target = "link1", source = "link1")
-    @Mapping(target = "link2", source = "link2")
     void updateFromDto(UpdateMemberRequestDto dto, @MappingTarget Member member);
 }
