@@ -1,4 +1,4 @@
-package BITAmin.BE.member.repository;
+package BITAmin.BE.member.mapper;
 
 import BITAmin.BE.member.dto.member.UpdateMemberRequestDto;
 import BITAmin.BE.member.entity.Member;
