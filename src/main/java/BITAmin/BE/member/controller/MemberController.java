@@ -25,6 +25,11 @@ public class MemberController {
     private final MemberService memberService;
     private final AuthService authService;
 
+    @GetMapping("/{memberId}")
+    public ResponseEntity<ApiResponse<MemberInfoDto>> memberInfo(@PathVariable Long memberId){
+        MemberInfoDto dto = memberService.getMemberInfo(memberId);
+        return ResponseEntity.ok(ApiResponse.success("회원 정보 조회 성공", dto));
+    }
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<String>> addMember(@RequestBody SignupReqeustDto dto) {

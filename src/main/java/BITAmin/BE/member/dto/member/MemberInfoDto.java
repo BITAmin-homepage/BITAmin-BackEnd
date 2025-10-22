@@ -15,7 +15,9 @@ public record MemberInfoDto(
         String school,
         Long cohort,
         Role role,
-        Status status
+        Status status,
+        String link1,
+        String link2
 ) {
     public static MemberInfoDto fromEntity(Member member) {
         return new MemberInfoDto(
@@ -28,7 +30,9 @@ public record MemberInfoDto(
                 member.getSchool(),
                 member.getCohort(),
                 member.getRole(),
-                member.getStatus()
+                member.getStatus(),
+                member.getLink1(),
+                member.getLink2()
         );
     }
 }

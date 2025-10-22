@@ -22,6 +22,11 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final RedisClient redisClient;
 
+    public MemberInfoDto getMemberInfo(Long memberId){
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        return MemberInfoDto.fromEntity(member);
+    }
     public void updateMember(Long memberId, UpdateMemberRequestDto dto){
         Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
