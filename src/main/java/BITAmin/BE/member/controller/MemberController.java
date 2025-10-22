@@ -30,6 +30,11 @@ public class MemberController {
         MemberInfoDto dto = memberService.getMemberInfo(memberId);
         return ResponseEntity.ok(ApiResponse.success("회원 정보 조회 성공", dto));
     }
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse<List<MemberIntro>>> memberIntroduce(){
+        List<MemberIntro> dto = memberService.getMemberIntroduce();
+        return ResponseEntity.ok(ApiResponse.success("모든 회원 정보 조회 성공", dto));
+    }
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<String>> addMember(@RequestBody SignupReqeustDto dto) {

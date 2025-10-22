@@ -10,9 +10,8 @@ import BITAmin.BE.member.repository.MemberRepository;
 import BITAmin.BE.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -26,6 +25,17 @@ public class MemberService {
         Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         return MemberInfoDto.fromEntity(member);
+    }
+    public List<MemberIntro> getMemberIntroduce(){
+        return memberRepository.findAll().stream()
+                .map(member -> new MemberIntro(
+                        member.getCohort(),
+                        member.getName(),
+                        member.getLink1(),
+                        member.getLink2(),
+                        member.getDepart()
+                ))
+                .collect(Collectors.toList());
     }
     public void updateMember(Long memberId, UpdateMemberRequestDto dto){
         Member member = memberRepository.findByMemberId(memberId)
