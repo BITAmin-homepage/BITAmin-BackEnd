@@ -6,12 +6,12 @@ import BITAmin.BE.global.exception.CustomException;
 import BITAmin.BE.global.exception.ErrorCode;
 import BITAmin.BE.global.util.RedisClient;
 import BITAmin.BE.member.enums.Role;
-import BITAmin.BE.member.mapper.MemberMapper;
 import BITAmin.BE.member.repository.MemberRepository;
 import BITAmin.BE.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -20,13 +20,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final MemberMapper memberMapper;
     private final RedisClient redisClient;
 
     public void updateMember(Long memberId, UpdateMemberRequestDto dto){
         Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
-        memberMapper.updateFromDto(dto, member);
+        //MemberMapper 오류로 인한 수동 setter
+        member.setName(dto.name());
+        member.setGender(dto.gender());
+        member.setBirthDate(dto.getBirthDate());
+        member.setSchool(dto.school());
+        member.setPhone(dto.phone());
+        member.setEmail(dto.email());
+        member.setCohort(dto.cohort());
+        member.setRole(dto.role());
+        member.setLink1(dto.link1());
+        member.setLink2(dto.link2());
         System.out.println("member link1 확인: "+member.getLink1());
         memberRepository.save(member);
     }
