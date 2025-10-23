@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public record ProjectInfoDto(
+        Long projectId,
         String title,
         String category,
         String description,
@@ -21,6 +22,7 @@ public record ProjectInfoDto(
 ) {
     public Project toEntity(ProjectInfoDto dto) {
         return Project.builder()
+                .projectId(this.projectId)
                 .title(this.title)
                 .category(this.category)
                 .description(this.description)
@@ -38,6 +40,7 @@ public record ProjectInfoDto(
                 .map(String::trim)
                 .toList();
         return new ProjectInfoDto(
+                project.getProjectId(),
                 project.getTitle(),
                 project.getCategory(),
                 project.getDescription(),

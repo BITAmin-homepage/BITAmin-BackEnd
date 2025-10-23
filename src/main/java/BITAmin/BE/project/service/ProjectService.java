@@ -4,6 +4,7 @@ import BITAmin.BE.global.exception.CustomException;
 import BITAmin.BE.global.exception.ErrorCode;
 import BITAmin.BE.global.generic.GenericService;
 import BITAmin.BE.project.dto.ProjectInfoDto;
+import BITAmin.BE.project.dto.ProjectThumbnail;
 import BITAmin.BE.project.entity.Project;
 import BITAmin.BE.project.enums.Award;
 import BITAmin.BE.project.repository.ProjectRepository;
@@ -15,6 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -29,8 +31,8 @@ public class ProjectService {
 
     public ProjectInfoDto uploadFileInfo(ProjectInfoDto dto){
         Project projectInfo = dto.toEntity(dto);
-        service.save(projectInfo);
-        return dto;
+        ProjectInfoDto savedDto = service.save(projectInfo);
+        return savedDto;
     }
     public List<Project> searchProjects(String cohort, String period, Award award) {
         Specification<Project> spec = Specification
@@ -64,5 +66,26 @@ public class ProjectService {
             project.setPpt(url);
         }
         projectRepository.save(project);
+    }
+    public List<ProjectThumbnail> getAllProjects() {
+        List<Project> projects = projectRepository.findAll();
+
+        // Entity → DTO 변환
+        return projects.stream()
+                .map(project -> new ProjectThumbnail(
+                        project.getThumbnail(),
+                        project.getPpt(),
+                        project.getTitle(),
+                        project.getCohort() == null
+                                ? List.of()
+                                : Arrays.stream(project.getCohort().split(","))
+                                .map(String::trim)
+                                .toList(),
+                        project.getCategory(),
+                        project.getStartDate() + " ~ " + project.getEndDate(),
+                        project.getMember(),
+                        project.getAward()
+                ))
+                .toList();
     }
 }

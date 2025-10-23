@@ -2,6 +2,7 @@ package BITAmin.BE.project.controller;
 
 import BITAmin.BE.global.dto.ApiResponse;
 import BITAmin.BE.project.dto.ProjectInfoDto;
+import BITAmin.BE.project.dto.ProjectThumbnail;
 import BITAmin.BE.project.entity.Project;
 import BITAmin.BE.project.enums.Award;
 import BITAmin.BE.project.service.ProjectService;
@@ -43,7 +44,7 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ProjectInfoDto>>> getProjects(
+    public ResponseEntity<ApiResponse<List<ProjectInfoDto>>> searchProjects(
             @RequestParam(required = false) String cohort,
             @RequestParam(required = false) String period,
             @RequestParam(required = false) Award award
@@ -61,5 +62,10 @@ public class ProjectController {
 
         ProjectInfoDto response = projectService.updateProject(projectId, dto);
         return ResponseEntity.ok(ApiResponse.success("프로젝트 수정 성공", response));
+    }
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse<List<ProjectThumbnail>>> getAllProjects() {
+        List<ProjectThumbnail> projects = projectService.getAllProjects();
+        return ResponseEntity.ok(ApiResponse.success("프로젝트 전체 조회 성공", projects));
     }
 }
