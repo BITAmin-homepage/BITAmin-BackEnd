@@ -23,9 +23,11 @@ public class ProjectController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("type") String type
+            @RequestParam("type") String type,
+            @RequestParam("projectId") Long projectId
     ) {
         String url = s3Service.uploadFile(file, type);
+        projectService.saveUrl(type, url, projectId);
         return ResponseEntity.ok(url);
     }
     @DeleteMapping("/{projectId}/file")

@@ -3,16 +3,14 @@ import BITAmin.BE.global.generic.CrudEntity;
 import BITAmin.BE.project.dto.ProjectInfoDto;
 import BITAmin.BE.project.enums.Award;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Project implements CrudEntity<ProjectInfoDto> {
@@ -29,6 +27,8 @@ public class Project implements CrudEntity<ProjectInfoDto> {
     private String member;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String thumbnail;
+    private String ppt;
 
     public void update(ProjectInfoDto dto) {
         this.title = dto.title();

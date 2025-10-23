@@ -52,4 +52,17 @@ public class ProjectService {
         service.update(projectId, dto);
         return ProjectInfoDto.fromEntity(project);
     }
+    public void saveUrl(String type, String url, Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
+        String[] typeParts = type.split("/");
+        String folderType = typeParts[0];
+
+        if ("thumbnail".equals(folderType)) {
+            project.setThumbnail(url);
+        } else if ("ppt".equals(folderType)) {
+            project.setPpt(url);
+        }
+        projectRepository.save(project);
+    }
 }
