@@ -3,18 +3,19 @@ import BITAmin.BE.global.generic.CrudEntity;
 import BITAmin.BE.project.dto.ProjectInfoDto;
 import BITAmin.BE.project.enums.Award;
 import BITAmin.BE.project.enums.Period;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Project implements CrudEntity<ProjectInfoDto> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,19 +25,22 @@ public class Project implements CrudEntity<ProjectInfoDto> {
     private String description;
     private String cohort;
     private Period period;
+    @Enumerated(EnumType.STRING)
     private Award award;
     private String member;
-    private LocalDate duration;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public void update(ProjectInfoDto dto) {
         this.title = dto.title();
         this.category = dto.category();
         this.description = dto.description();
-        this.cohort = dto.cohort();
+        this.cohort = dto.cohort() != null ? String.join(", ", dto.cohort()) : this.cohort;
         this.period = dto.period();
         this.award = dto.award();
         this.member = dto.member();
-        this.duration = dto.duration();
+        this.startDate = dto.startDate();
+        this.endDate = dto.endDate();
     }
     @Override
     public ProjectInfoDto toDto() {

@@ -5,17 +5,21 @@ import BITAmin.BE.project.enums.Award;
 import BITAmin.BE.project.enums.Period;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 public record ProjectInfoDto(
         Long projectId,
         String title,
         String category,
         String description,
-        String cohort,
-        Period period,
+        List<String> cohort,
+        LocalDate startDate,
+        LocalDate endDate,
         Award award,
         String member,
-        LocalDate duration
+        Period period
+
 ) {
     public Project toEntity(ProjectInfoDto dto) {
         return Project.builder()
@@ -23,25 +27,30 @@ public record ProjectInfoDto(
                 .title(this.title)
                 .category(this.category)
                 .description(this.description)
-                .cohort(this.cohort)
+                .cohort(String.join(", ", this.cohort))
                 .period(this.period)
                 .award(this.award)
                 .member(this.member)
-                .duration(this.duration)
+                .startDate(this.startDate)
+                .endDate(this.endDate)
                 .build();
     }
 
     public static ProjectInfoDto fromEntity(Project project) {
+        List<String> cohorts = Arrays.stream(project.getCohort().split(","))
+                .map(String::trim)
+                .toList();
         return new ProjectInfoDto(
                 project.getProjectId(),
                 project.getTitle(),
                 project.getCategory(),
                 project.getDescription(),
-                project.getCohort(),
-                project.getPeriod(),
+                cohorts,
+                project.getStartDate(),
+                project.getEndDate(),
                 project.getAward(),
                 project.getMember(),
-                project.getDuration()
+                project.getPeriod()
         );
     }
 }
