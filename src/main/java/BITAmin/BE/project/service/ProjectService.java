@@ -82,7 +82,7 @@ public class ProjectService {
                                 .map(String::trim)
                                 .toList(),
                         project.getCategory(),
-                        project.getStartDate() + " ~ " + project.getEndDate(),
+                        project.getPeriod(),
                         project.getMember(),
                         project.getAward()
                 ))
