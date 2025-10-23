@@ -79,6 +79,7 @@ public class ProjectService {
         // Entity → DTO 변환
         return projects.stream()
                 .map(project -> new ProjectThumbnail(
+                        project.getProjectId(),
                         project.getThumbnail(),
                         project.getPpt(),
                         project.getTitle(),
