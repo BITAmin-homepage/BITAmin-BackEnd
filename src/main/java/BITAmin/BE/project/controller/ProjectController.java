@@ -44,7 +44,7 @@ public class ProjectController {
         return ResponseEntity.ok(ApiResponse.success("프로젝트 업로드 성공", response));
     }
 
-    @GetMapping
+    @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<ProjectInfoDto>>> searchProjects(
             @RequestParam(required = false) String cohort,
             @RequestParam(required = false) String period,
@@ -69,7 +69,7 @@ public class ProjectController {
         List<ProjectThumbnail> projects = projectService.getAllProjects();
         return ResponseEntity.ok(ApiResponse.success("프로젝트 전체 조회 성공", projects));
     }
-    @GetMapping("/{projectId}")
+    @GetMapping
     public ResponseEntity<ApiResponse<ProjectDetail>> getCertainProjects(
             @RequestParam Long projectId
     ){
