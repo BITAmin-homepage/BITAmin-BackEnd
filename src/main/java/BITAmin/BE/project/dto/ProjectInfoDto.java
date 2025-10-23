@@ -2,7 +2,6 @@ package BITAmin.BE.project.dto;
 
 import BITAmin.BE.project.entity.Project;
 import BITAmin.BE.project.enums.Award;
-import BITAmin.BE.project.enums.Period;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -18,7 +17,7 @@ public record ProjectInfoDto(
         LocalDate endDate,
         Award award,
         String member,
-        Period period
+        String period
 
 ) {
     public Project toEntity(ProjectInfoDto dto) {

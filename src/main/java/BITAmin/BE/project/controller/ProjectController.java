@@ -4,7 +4,6 @@ import BITAmin.BE.global.dto.ApiResponse;
 import BITAmin.BE.project.dto.ProjectInfoDto;
 import BITAmin.BE.project.entity.Project;
 import BITAmin.BE.project.enums.Award;
-import BITAmin.BE.project.enums.Period;
 import BITAmin.BE.project.service.ProjectService;
 import BITAmin.BE.project.service.S3Service;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +43,7 @@ public class ProjectController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<ProjectInfoDto>>> getProjects(
             @RequestParam(required = false) String cohort,
-            @RequestParam(required = false) Period period,
+            @RequestParam(required = false) String period,
             @RequestParam(required = false) Award award
     ) {
         List<Project> projects = projectService.searchProjects(cohort, period, award);

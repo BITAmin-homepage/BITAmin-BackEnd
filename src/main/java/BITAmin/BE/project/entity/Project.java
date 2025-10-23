@@ -2,7 +2,6 @@ package BITAmin.BE.project.entity;
 import BITAmin.BE.global.generic.CrudEntity;
 import BITAmin.BE.project.dto.ProjectInfoDto;
 import BITAmin.BE.project.enums.Award;
-import BITAmin.BE.project.enums.Period;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +23,7 @@ public class Project implements CrudEntity<ProjectInfoDto> {
     private String category;
     private String description;
     private String cohort;
-    private Period period;
+    private String period;
     @Enumerated(EnumType.STRING)
     private Award award;
     private String member;
