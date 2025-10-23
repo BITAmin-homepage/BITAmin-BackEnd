@@ -3,6 +3,7 @@ package BITAmin.BE.project.service;
 import BITAmin.BE.global.exception.CustomException;
 import BITAmin.BE.global.exception.ErrorCode;
 import BITAmin.BE.global.generic.GenericService;
+import BITAmin.BE.project.dto.ProjectDetail;
 import BITAmin.BE.project.dto.ProjectInfoDto;
 import BITAmin.BE.project.dto.ProjectThumbnail;
 import BITAmin.BE.project.entity.Project;
@@ -54,9 +55,14 @@ public class ProjectService {
         service.update(projectId, dto);
         return ProjectInfoDto.fromEntity(project);
     }
+    public ProjectDetail getCertainProject(Long projectId){
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new CustomException(ErrorCode.DB_NOT_FOUND));
+        return ProjectDetail.fromEntity(project);
+    }
     public void saveUrl(String type, String url, Long projectId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.DB_NOT_FOUND));
         String[] typeParts = type.split("/");
         String folderType = typeParts[0];
 

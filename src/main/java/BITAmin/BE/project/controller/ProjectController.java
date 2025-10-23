@@ -1,6 +1,7 @@
 package BITAmin.BE.project.controller;
 
 import BITAmin.BE.global.dto.ApiResponse;
+import BITAmin.BE.project.dto.ProjectDetail;
 import BITAmin.BE.project.dto.ProjectInfoDto;
 import BITAmin.BE.project.dto.ProjectThumbnail;
 import BITAmin.BE.project.entity.Project;
@@ -67,5 +68,12 @@ public class ProjectController {
     public ResponseEntity<ApiResponse<List<ProjectThumbnail>>> getAllProjects() {
         List<ProjectThumbnail> projects = projectService.getAllProjects();
         return ResponseEntity.ok(ApiResponse.success("프로젝트 전체 조회 성공", projects));
+    }
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ApiResponse<ProjectDetail>> getCertainProjects(
+            @RequestParam Long projectId
+    ){
+        ProjectDetail project=projectService.getCertainProject(projectId);
+        return ResponseEntity.ok(ApiResponse.success("프로젝트 조회 성공", project));
     }
 }
