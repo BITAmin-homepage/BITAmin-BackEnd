@@ -3,6 +3,7 @@ package BITAmin.BE.project.controller;
 import BITAmin.BE.global.dto.ApiResponse;
 import BITAmin.BE.project.dto.ProjectDetail;
 import BITAmin.BE.project.dto.ProjectInfoDto;
+import BITAmin.BE.project.dto.ProjectPpt;
 import BITAmin.BE.project.dto.ProjectThumbnail;
 import BITAmin.BE.project.entity.Project;
 import BITAmin.BE.project.enums.Award;
@@ -75,5 +76,13 @@ public class ProjectController {
     ){
         ProjectDetail project=projectService.getCertainProject(projectId);
         return ResponseEntity.ok(ApiResponse.success("프로젝트 조회 성공", project));
+    }
+    @GetMapping("/ppt/{projectId}")
+    public ResponseEntity<ApiResponse<ProjectPpt>> getProjectPpt(
+            @PathVariable Long projectId
+    ){
+        ProjectPpt ppt = projectService.getProjectPpt(projectId);
+        return ResponseEntity.ok(ApiResponse.success("프로젝트 ppt 반환성공", ppt));
+
     }
 }

@@ -19,6 +19,7 @@ public class Project implements CrudEntity<ProjectInfoDto> {
     private Long projectId;
     private String title;
     private String category;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String cohort;
     private String period;

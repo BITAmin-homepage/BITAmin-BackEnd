@@ -5,6 +5,7 @@ import BITAmin.BE.global.exception.ErrorCode;
 import BITAmin.BE.global.generic.GenericService;
 import BITAmin.BE.project.dto.ProjectDetail;
 import BITAmin.BE.project.dto.ProjectInfoDto;
+import BITAmin.BE.project.dto.ProjectPpt;
 import BITAmin.BE.project.dto.ProjectThumbnail;
 import BITAmin.BE.project.entity.Project;
 import BITAmin.BE.project.enums.Award;
@@ -59,6 +60,11 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new CustomException(ErrorCode.DB_NOT_FOUND));
         return ProjectDetail.fromEntity(project);
+    }
+    public ProjectPpt getProjectPpt(Long projectId){
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new CustomException(ErrorCode.DB_NOT_FOUND));
+        return new ProjectPpt(project.getPpt());
     }
     public void saveUrl(String type, String url, Long projectId) {
         Project project = projectRepository.findById(projectId)
