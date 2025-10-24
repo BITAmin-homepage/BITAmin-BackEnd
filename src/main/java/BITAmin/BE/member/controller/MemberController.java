@@ -35,14 +35,7 @@ public class MemberController {
         List<MemberIntro> dto = memberService.getMemberIntroduce();
         return ResponseEntity.ok(ApiResponse.success("모든 회원 정보 조회 성공", dto));
     }
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<String>> addMember(@RequestBody SignupReqeustDto dto) {
-        authService.signup(dto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(ApiResponse.success("멤버 추가 완료", null));
-    }
+
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<List<MemberInfoDto>>> getMembersByStatus(

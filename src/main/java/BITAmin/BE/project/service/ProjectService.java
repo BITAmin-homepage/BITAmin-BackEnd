@@ -11,10 +11,6 @@ import BITAmin.BE.project.entity.Project;
 import BITAmin.BE.project.enums.Award;
 import BITAmin.BE.project.repository.ProjectRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -36,8 +32,6 @@ public class ProjectService {
         return savedDto;
     }
     public void deleteProject(Long projectId){
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new CustomException(ErrorCode.DB_NOT_FOUND));
         service.delete(projectId);
     }
     @Transactional
