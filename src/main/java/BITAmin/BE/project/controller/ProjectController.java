@@ -33,7 +33,7 @@ public class ProjectController {
         projectService.saveUrl(type, url, projectId);
         return ResponseEntity.ok(url);
     }
-    @DeleteMapping("/{projectId}/file")
+    @DeleteMapping("/{projectId}")
     public ResponseEntity<String> deleteFile(@PathVariable Long projectId, @RequestParam String key) {
         s3Service.deleteFile(key);
         projectService.deleteProject(projectId);
@@ -45,18 +45,6 @@ public class ProjectController {
         return ResponseEntity.ok(ApiResponse.success("프로젝트 업로드 성공", response));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<ProjectInfoDto>>> searchProjects(
-            @RequestParam(required = false) String cohort,
-            @RequestParam(required = false) String period,
-            @RequestParam(required = false) Award award
-    ) {
-        List<Project> projects = projectService.searchProjects(cohort, period, award);
-        List<ProjectInfoDto> response = projects.stream()
-                .map(ProjectInfoDto::fromEntity)
-                .toList();
-        return ResponseEntity.ok(ApiResponse.success("프로젝트 검색 완료", response));
-    }
     @PutMapping("/{projectId}")
     public ResponseEntity<ApiResponse<ProjectInfoDto>> updateProject(
             @PathVariable Long projectId,

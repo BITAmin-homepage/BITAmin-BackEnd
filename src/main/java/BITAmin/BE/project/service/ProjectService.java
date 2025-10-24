@@ -10,7 +10,6 @@ import BITAmin.BE.project.dto.ProjectThumbnail;
 import BITAmin.BE.project.entity.Project;
 import BITAmin.BE.project.enums.Award;
 import BITAmin.BE.project.repository.ProjectRepository;
-import BITAmin.BE.project.repository.ProjectSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,14 +34,6 @@ public class ProjectService {
         Project projectInfo = dto.toEntity(dto);
         ProjectInfoDto savedDto = service.save(projectInfo);
         return savedDto;
-    }
-    public List<Project> searchProjects(String cohort, String period, Award award) {
-        Specification<Project> spec = Specification
-                .where(ProjectSpecification.hasCohort(cohort))
-                .and(ProjectSpecification.hasPeriod(period))
-                .and(ProjectSpecification.hasAward(award));
-
-        return projectRepository.findAll(spec);
     }
     public void deleteProject(Long projectId){
         Project project = projectRepository.findById(projectId)

@@ -101,11 +101,4 @@ public class MemberService {
         member.setStatusApprove();
     }
 
-    public MemberStatsDto getMemberStats(){
-        int total = (int) memberRepository.count();
-        int memberTotal = memberRepository.countByRole(Role.MEMBER);
-        int adminTotal = memberRepository.countByRole(Role.ADMIN);
-        int cohortTotal = memberRepository.countDistinctCohort();
-        return new MemberStatsDto(total, memberTotal, adminTotal, cohortTotal);
-    }
 }

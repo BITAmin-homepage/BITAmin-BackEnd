@@ -14,8 +14,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
     Optional<Member> findByUsername(String username);
     Optional<Member> findByMemberId(Long memberId);
-    int countByRole(Role role);
     List<Member> findByStatusIn(List<Status> statuses);
-    @Query("SELECT COUNT(DISTINCT m.cohort) FROM Member m WHERE m.cohort IS NOT NULL")
-    int countDistinctCohort();
 }
