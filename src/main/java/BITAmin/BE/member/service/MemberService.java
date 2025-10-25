@@ -38,7 +38,8 @@ public class MemberService {
                         member.getName(),
                         member.getLink1(),
                         member.getLink2(),
-                        member.getDepart()
+                        member.getDepart(),
+                        member.getImage()
                 ))
                 .collect(Collectors.toList());
 
@@ -49,7 +50,8 @@ public class MemberService {
                         aged.getName(),
                         aged.getLink1(),
                         aged.getLink2(),
-                        aged.getDepart()
+                        aged.getDepart(),
+                        aged.getImage()
                 ))
                 .collect(Collectors.toList());
 
@@ -74,6 +76,7 @@ public class MemberService {
         member.setRole(dto.role());
         member.setLink1(dto.link1());
         member.setLink2(dto.link2());
+        member.setImage(dto.image());
         System.out.println("member link1 확인: "+member.getLink1());
         memberRepository.save(member);
     }

@@ -22,4 +22,5 @@ public class AgedMember {
     private String link1;
     private String link2;
     private String depart;
+    private String image;
 }

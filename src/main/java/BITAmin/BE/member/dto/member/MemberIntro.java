@@ -5,5 +5,6 @@ public record MemberIntro (
     String name,
     String link1,
     String link2,
-    String depart
+    String depart,
+    String image
 ){}

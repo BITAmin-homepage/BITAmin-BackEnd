@@ -34,6 +34,7 @@ public class Member {
     private String link2;
     @Column(nullable=true)
     private String depart;
+    private String image;
     public void setStatusPending() {
         this.status = Status.PENDING;
     }
