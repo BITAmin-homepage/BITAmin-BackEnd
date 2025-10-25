@@ -7,6 +7,7 @@ import BITAmin.BE.member.entity.Member;
 import BITAmin.BE.member.enums.Status;
 import BITAmin.BE.member.service.AuthService;
 import BITAmin.BE.member.service.MemberService;
+import BITAmin.BE.project.service.S3Service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,7 +25,8 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
-    private final AuthService authService;
+    private final S3Service s3Service;
+
 
     @GetMapping("/{memberId}")
     public ResponseEntity<ApiResponse<MemberInfoDto>> memberInfo(@PathVariable Long memberId){
@@ -65,5 +68,16 @@ public class MemberController {
         memberService.deleteMember(memberId);
         return ResponseEntity
                 .ok(ApiResponse.success("삭제 완료", null));
+    }
+
+    @PostMapping("/upload/profile")
+    public ResponseEntity<ApiResponse<String>> uploadFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("type") String type,
+            @RequestParam("memberId") Long memberId
+    ) {
+        String url = s3Service.uploadFile(file, type);
+        memberService.saveUrl(type, url, memberId);
+        return ResponseEntity.ok(ApiResponse.success("프로필 사진 저장 완료", url));
     }
 }

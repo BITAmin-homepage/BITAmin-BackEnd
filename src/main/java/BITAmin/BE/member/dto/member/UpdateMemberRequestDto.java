@@ -14,7 +14,6 @@ public record UpdateMemberRequestDto(
         Long cohort,
         Role role,
         String link1,
-        String link2,
-        String image
+        String link2
 ) {
 }

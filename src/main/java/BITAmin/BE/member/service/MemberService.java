@@ -2,6 +2,7 @@ package BITAmin.BE.member.service;
 import BITAmin.BE.member.dto.member.*;
 import BITAmin.BE.member.enums.Status;
 import BITAmin.BE.member.repository.AgedMemberRepository;
+import BITAmin.BE.project.entity.Project;
 import jakarta.transaction.Transactional;
 import BITAmin.BE.global.exception.CustomException;
 import BITAmin.BE.global.exception.ErrorCode;
@@ -76,7 +77,6 @@ public class MemberService {
         member.setRole(dto.role());
         member.setLink1(dto.link1());
         member.setLink2(dto.link2());
-        member.setImage(dto.image());
         System.out.println("member link1 확인: "+member.getLink1());
         memberRepository.save(member);
     }
@@ -103,5 +103,12 @@ public class MemberService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         member.setStatusApprove();
     }
+    public void saveUrl(String type, String url, Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        member.setImage(url);
+        memberRepository.save(member);
+    }
+
 
 }

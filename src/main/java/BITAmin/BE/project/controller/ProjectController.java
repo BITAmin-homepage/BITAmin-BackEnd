@@ -33,6 +33,7 @@ public class ProjectController {
         projectService.saveUrl(type, url, projectId);
         return ResponseEntity.ok(url);
     }
+
     @DeleteMapping("/{projectId}")
     public ResponseEntity<String> deleteFile(@PathVariable Long projectId, @RequestParam String key) {
         s3Service.deleteFile(key);
