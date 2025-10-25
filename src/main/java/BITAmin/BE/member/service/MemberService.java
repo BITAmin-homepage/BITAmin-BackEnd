@@ -3,6 +3,7 @@ import BITAmin.BE.member.dto.member.*;
 import BITAmin.BE.member.enums.Status;
 import BITAmin.BE.member.repository.AgedMemberRepository;
 import BITAmin.BE.project.entity.Project;
+import BITAmin.BE.project.service.S3Service;
 import jakarta.transaction.Transactional;
 import BITAmin.BE.global.exception.CustomException;
 import BITAmin.BE.global.exception.ErrorCode;
@@ -25,6 +26,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final AgedMemberRepository agedMemberRepository;
     private final RedisClient redisClient;
+    private final S3Service s3Service;
 
     public MemberInfoDto getMemberInfo(Long memberId){
         Member member = memberRepository.findByMemberId(memberId)
@@ -108,6 +110,19 @@ public class MemberService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         member.setImage(url);
         memberRepository.save(member);
+    }
+    public void deleteProfile(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+        if (member.getImage() != null && !member.getImage().isBlank()) {
+            try {
+                String existingUrl = member.getImage();
+                String key = existingUrl.substring(existingUrl.indexOf(".com/") + 5);
+                s3Service.deleteFile(key);
+            } catch (Exception e) {
+                System.out.println("기존 이미지 삭제 실패 (무시): " + e.getMessage());
+            }
+        }
     }
 
 

@@ -19,7 +19,8 @@ public enum ErrorCode {
     INVALID_SIGNATURE(HttpStatus.UNAUTHORIZED, 503, "서명이 일치하지 않습니다."),
 
     FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 600, "파일 업로드에 실패했습니다."),
-    DB_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, 601, "해당 id와 일치하는 객체가 없습니다.");
+    DB_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, 601, "해당 id와 일치하는 객체가 없습니다."),
+    FILE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 602, "파일 삭제에 실패했습니다.");
     private final HttpStatus httpStatus;
     private final int code;
     private final String message;

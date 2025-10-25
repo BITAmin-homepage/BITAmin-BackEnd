@@ -76,6 +76,7 @@ public class MemberController {
             @RequestParam("type") String type,
             @RequestParam("memberId") Long memberId
     ) {
+        memberService.deleteProfile(memberId);
         String url = s3Service.uploadFile(file, type);
         memberService.saveUrl(type, url, memberId);
         return ResponseEntity.ok(ApiResponse.success("프로필 사진 저장 완료", url));
