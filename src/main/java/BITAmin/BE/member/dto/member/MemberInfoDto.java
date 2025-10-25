@@ -17,7 +17,8 @@ public record MemberInfoDto(
         Role role,
         Status status,
         String link1,
-        String link2
+        String link2,
+        String image
 ) {
     public static MemberInfoDto fromEntity(Member member) {
         return new MemberInfoDto(
@@ -32,7 +33,8 @@ public record MemberInfoDto(
                 member.getRole(),
                 member.getStatus(),
                 member.getLink1(),
-                member.getLink2()
+                member.getLink2(),
+                member.getImage()
         );
     }
 }
