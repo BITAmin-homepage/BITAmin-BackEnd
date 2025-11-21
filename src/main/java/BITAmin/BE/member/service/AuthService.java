@@ -56,8 +56,7 @@ public class AuthService {
     public void validateMember(Member member){
         Status status = member.getStatus();
         if(status == Status.PENDING){
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, "운영진 승인을 대기 중입니다.");
+            throw new CustomException(ErrorCode.UNAPPROVED_USER);
         }
         if(status!=Status.APPROVED){
             throw new ResponseStatusException(
