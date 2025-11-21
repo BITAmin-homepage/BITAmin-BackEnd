@@ -79,6 +79,7 @@ public class MemberService {
         member.setRole(dto.role());
         member.setLink1(dto.link1());
         member.setLink2(dto.link2());
+        member.setDepart(dto.depart());
         System.out.println("member link1 확인: "+member.getLink1());
         memberRepository.save(member);
     }
