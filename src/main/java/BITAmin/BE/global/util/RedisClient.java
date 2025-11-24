@@ -11,7 +11,6 @@ import java.time.Duration;
 @Component
 @RequiredArgsConstructor
 public class RedisClient {
-
     private final RedisTemplate<String, Object> redisTemplate;
 
     public void setValue(String key, String value, Long timeout) {
