@@ -40,17 +40,16 @@ public class ProjectController {
     ) {
         try {
             long sizeMB = file.getSize() / (1024 * 1024);
-            if (sizeMB <= 30) {
+            if (sizeMB <= 10) {
                 String pptxUrl = s3Service.uploadFile(file, type);
                 return ResponseEntity.ok(pptxUrl);
             }
             File pdfFile = libreOfficeService.convertToPdf(file);
             String pdfUrl = s3Service.uploadPdf(pdfFile);
-            pdfFile.delete();
+            libreOfficeService.cleanTempFiles(pdfFile);
             return ResponseEntity.ok(pdfUrl);
         } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("업로드 실패: " + e.getMessage());
         }
     }

@@ -29,18 +29,13 @@ public class S3Service {
     public String uploadFile(MultipartFile file, String folder) {
         try {
             String fileName = folder + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(file.getSize());
-            metadata.setContentType(file.getContentType());
-            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+            PutObjectRequest request = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(fileName)
                     .contentType(file.getContentType())
                     .build();
-
-            s3Client.putObject(putObjectRequest,
+            s3Client.putObject(request,
                     RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-
             return "https://" + bucketName + ".s3.amazonaws.com/" + fileName;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.FILE_UPLOAD_FAILED);
@@ -82,13 +77,17 @@ public class S3Service {
     }
 
     public String uploadPdf(File file) {
-        String key = "pdf/" + UUID.randomUUID() + ".pdf";
-        PutObjectRequest request = PutObjectRequest.builder()
-                .bucket(bucketName)
-                .key(key)
-                .contentType("application/pdf")
-                .build();
-        s3Client.putObject(request, RequestBody.fromFile(file));
-        return "https://" + bucketName + ".s3.amazonaws.com/" + key;
+        try {
+            String key = "pdf/" + UUID.randomUUID() + ".pdf";
+            PutObjectRequest request = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .contentType("application/pdf")
+                    .build();
+            s3Client.putObject(request, RequestBody.fromFile(file));
+            return "https://" + bucketName + ".s3.amazonaws.com/" + key;
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.FILE_UPLOAD_FAILED);
+        }
     }
 }
