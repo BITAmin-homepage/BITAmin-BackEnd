@@ -38,14 +38,15 @@ public class ProjectController {
             @RequestParam("projectId") Long projectId
     ) {
         try {
-            String pptxUrl = s3Service.uploadFile(file, type);
             long sizeMB = file.getSize() / (1024 * 1024);
-            if(sizeMB > 30) {
-                File pdfFile = libreOfficeService.convertToPdf(file);
-                String pdfUrl = s3Service.uploadPdf(pdfFile);
-                return ResponseEntity.ok(pdfUrl);
+            if (sizeMB <= 30) {
+                String pptxUrl = s3Service.uploadFile(file, type);
+                return ResponseEntity.ok(pptxUrl);
             }
-            return ResponseEntity.ok(pptxUrl);
+            File pdfFile = libreOfficeService.convertToPdf(file);
+            String pdfUrl = s3Service.uploadPdf(pdfFile);
+            pdfFile.delete();
+            return ResponseEntity.ok(pdfUrl);
         } catch (Exception e) {
             throw new CustomException(ErrorCode.FILE_UPLOAD_FAILED);
         }

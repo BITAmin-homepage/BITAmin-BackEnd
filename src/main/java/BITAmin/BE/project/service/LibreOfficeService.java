@@ -10,7 +10,7 @@ import java.io.IOException;
 public class LibreOfficeService {
 
     public File convertToPdf(MultipartFile file) throws IOException, InterruptedException {
-        File tempPptx = File.createTempFile("upload", ".pptx");
+        File tempPptx = File.createTempFile("upload-", ".pptx");
         file.transferTo(tempPptx);
         File outputPdf = new File(tempPptx.getParent(), "converted.pdf");
         ProcessBuilder pb = new ProcessBuilder(

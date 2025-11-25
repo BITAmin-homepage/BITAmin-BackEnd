@@ -61,17 +61,7 @@ public class S3Service {
             throw new CustomException(ErrorCode.FILE_UPLOAD_FAILED);
         }
     }
-    public void deleteFile(String key) {
-        try {
-            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .build();
-            s3Client.deleteObject(deleteObjectRequest);
-        } catch (Exception e) {
-            throw new CustomException(ErrorCode.FILE_DELETE_FAILED);
-        }
-    }
+
     public void deleteFolder(String prefix) {
         try {
             ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
@@ -91,13 +81,13 @@ public class S3Service {
     }
 
     public String uploadPdf(File file) {
+        String key = "pdf/" + UUID.randomUUID() + ".pdf";
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucketName)
-                .key("pdf/" + UUID.randomUUID() + ".pdf")
+                .key(key)
                 .contentType("application/pdf")
                 .build();
-        s3Client.putObject(request,
-                RequestBody.fromFile(file));
-        return "https://" + bucketName + ".s3.amazonaws.com/pdf/" + file.getName();
+        s3Client.putObject(request, RequestBody.fromFile(file));
+        return "https://" + bucketName + ".s3.amazonaws.com/" + key;
     }
 }
