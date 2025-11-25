@@ -1,12 +1,15 @@
 package BITAmin.BE.project.controller;
 
 import BITAmin.BE.global.dto.ApiResponse;
+import BITAmin.BE.global.exception.CustomException;
+import BITAmin.BE.global.exception.ErrorCode;
 import BITAmin.BE.project.dto.ProjectDetail;
 import BITAmin.BE.project.dto.ProjectInfoDto;
 import BITAmin.BE.project.dto.ProjectPpt;
 import BITAmin.BE.project.dto.ProjectThumbnail;
 import BITAmin.BE.project.entity.Project;
 import BITAmin.BE.project.enums.Award;
+import BITAmin.BE.project.service.LibreOfficeService;
 import BITAmin.BE.project.service.ProjectService;
 import BITAmin.BE.project.service.S3Service;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 @RestController
@@ -22,6 +26,7 @@ import java.util.List;
 public class ProjectController {
     private final S3Service s3Service;
     private final ProjectService projectService;
+    private final LibreOfficeService libreOfficeService;
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(
@@ -29,9 +34,18 @@ public class ProjectController {
             @RequestParam("type") String type,
             @RequestParam("projectId") Long projectId
     ) {
-        String url = s3Service.uploadFile(file, type);
-        projectService.saveUrl(type, url, projectId);
-        return ResponseEntity.ok(url);
+        try {
+            String pptxUrl = s3Service.uploadFile(file, type);
+            long sizeMB = file.getSize() / (1024 * 1024);
+            if(sizeMB > 30) {
+                File pdfFile = libreOfficeService.convertToPdf(file);
+                String pdfUrl = s3Service.uploadPdf(pdfFile);
+                return ResponseEntity.ok(pdfUrl);
+            }
+            return ResponseEntity.ok(pptxUrl);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.FILE_UPLOAD_FAILED);
+        }
     }
 
     @DeleteMapping("/{projectId}")

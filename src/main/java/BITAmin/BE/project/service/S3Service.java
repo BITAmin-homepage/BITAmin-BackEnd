@@ -14,6 +14,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.io.File;
 import java.util.UUID;
 
 @Service
@@ -55,5 +56,15 @@ public class S3Service {
         } catch (Exception e) {
             throw new CustomException(ErrorCode.FILE_DELETE_FAILED);
         }
+    }
+    public String uploadPdf(File file) {
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key("pdf/" + UUID.randomUUID() + ".pdf")
+                .contentType("application/pdf")
+                .build();
+        s3Client.putObject(request,
+                RequestBody.fromFile(file));
+        return "https://" + bucketName + ".s3.amazonaws.com/pdf/" + file.getName();
     }
 }
