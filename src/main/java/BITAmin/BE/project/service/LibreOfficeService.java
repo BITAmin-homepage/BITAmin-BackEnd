@@ -3,8 +3,10 @@ package BITAmin.BE.project.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 @Service
 public class LibreOfficeService {
@@ -14,17 +16,26 @@ public class LibreOfficeService {
         file.transferTo(tempPptx);
         File outputPdf = new File(tempPptx.getParent(), "converted.pdf");
         ProcessBuilder pb = new ProcessBuilder(
-                "libreoffice",
+                "/usr/bin/libreoffice",
                 "--headless",
-                "--convert-to",
-                "pdf",
+                "--convert-to", "pdf",
                 tempPptx.getAbsolutePath(),
-                "--outdir",
-                tempPptx.getParent()
+                "--outdir", tempPptx.getParent()
         );
-        Process process = pb.start();
-        process.waitFor();
 
+        pb.redirectErrorStream(true);
+        Process process = pb.start();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("[LibreOffice] " + line);
+            }
+        }
+
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new RuntimeException("LibreOffice 변환 실패. exit code = " + exitCode);
+        }
         return outputPdf;
     }
 }
