@@ -14,6 +14,7 @@ import BITAmin.BE.project.service.LibreOfficeService;
 import BITAmin.BE.project.service.ProjectService;
 import BITAmin.BE.project.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,7 +49,9 @@ public class ProjectController {
             pdfFile.delete();
             return ResponseEntity.ok(pdfUrl);
         } catch (Exception e) {
-            throw new CustomException(ErrorCode.FILE_UPLOAD_FAILED);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("업로드 실패: " + e.getMessage());
         }
     }
 
