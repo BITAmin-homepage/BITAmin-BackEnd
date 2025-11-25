@@ -1,6 +1,8 @@
 package BITAmin.BE.member.controller;
 
 import BITAmin.BE.global.dto.ApiResponse;
+import BITAmin.BE.global.exception.CustomException;
+import BITAmin.BE.global.exception.ErrorCode;
 import BITAmin.BE.member.dto.auth.SignupReqeustDto;
 import BITAmin.BE.member.dto.member.*;
 import BITAmin.BE.member.entity.Member;
@@ -71,14 +73,21 @@ public class MemberController {
     }
 
     @PostMapping("/upload/profile")
-    public ResponseEntity<ApiResponse<String>> uploadFile(
+    public ResponseEntity<ApiResponse<String>> uploadProfile(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("type") String type,
             @RequestParam("memberId") Long memberId
     ) {
         memberService.deleteProfile(memberId);
-        String url = s3Service.uploadFile(file, type);
-        memberService.saveUrl(type, url, memberId);
+        String url = s3Service.uploadProfileImage(file, memberId);
+        memberService.saveProfileUrl(url, memberId);
         return ResponseEntity.ok(ApiResponse.success("프로필 사진 저장 완료", url));
+    }
+    @DeleteMapping
+    public ResponseEntity<String> deleteProfile(
+            @RequestParam Long memberId) {
+        String profilePrefix = "profile/" + memberId + "/";
+        s3Service.deleteFolder(profilePrefix);
+        memberService.clearProfileImage(memberId);
+        return ResponseEntity.ok("프로필 사진 삭제 완료");
     }
 }

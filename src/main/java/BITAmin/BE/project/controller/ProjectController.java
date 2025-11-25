@@ -9,6 +9,7 @@ import BITAmin.BE.project.dto.ProjectPpt;
 import BITAmin.BE.project.dto.ProjectThumbnail;
 import BITAmin.BE.project.entity.Project;
 import BITAmin.BE.project.enums.Award;
+import BITAmin.BE.project.repository.ProjectRepository;
 import BITAmin.BE.project.service.LibreOfficeService;
 import BITAmin.BE.project.service.ProjectService;
 import BITAmin.BE.project.service.S3Service;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ import java.util.List;
 public class ProjectController {
     private final S3Service s3Service;
     private final ProjectService projectService;
+    private final ProjectRepository projectRepository;
     private final LibreOfficeService libreOfficeService;
 
     @PostMapping("/upload")
@@ -48,12 +51,19 @@ public class ProjectController {
         }
     }
 
-    @DeleteMapping("/{projectId}")
-    public ResponseEntity<String> deleteFile(@PathVariable Long projectId, @RequestParam String key) {
-        s3Service.deleteFile(key);
+    @DeleteMapping
+    public ResponseEntity<String> deleteProject(
+            @RequestParam String projectTitle) {
+        Long projectId = projectRepository.findIdByTitle(projectTitle)
+                .orElseThrow(() -> new CustomException(ErrorCode.DB_NOT_FOUND));
+        String pptPrefix = "ppt/" + projectTitle + "/";
+        String thumbPrefix = "thumbnail/" + projectTitle + "/";
+        s3Service.deleteFolder(pptPrefix);
+        s3Service.deleteFolder(thumbPrefix);
         projectService.deleteProject(projectId);
-        return ResponseEntity.ok("프로젝트 삭제 완료: " + key);
+        return ResponseEntity.ok("프로젝트 및 연관 파일 삭제 완료");
     }
+
     @PostMapping("/uploadInfo")
     public ResponseEntity<ApiResponse<ProjectInfoDto>> uploadFileInfo(@RequestBody ProjectInfoDto dto){
         ProjectInfoDto response = projectService.uploadFileInfo(dto);

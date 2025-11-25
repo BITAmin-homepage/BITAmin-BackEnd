@@ -101,12 +101,19 @@ public class MemberService {
         redisClient.deleteValue("RefreshToken:"+member.getUsername());
     }
     @Transactional
+    public void clearProfileImage(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.DB_NOT_FOUND));
+        member.setImage(null);
+        memberRepository.save(member);
+    }
+    @Transactional
     public void approveMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         member.setStatusApprove();
     }
-    public void saveUrl(String type, String url, Long memberId) {
+    public void saveProfileUrl(String url, Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
         member.setImage(url);
@@ -115,15 +122,10 @@ public class MemberService {
     public void deleteProfile(Long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
-        if (member.getImage() != null && !member.getImage().isBlank()) {
-            try {
-                String existingUrl = member.getImage();
-                String key = existingUrl.substring(existingUrl.indexOf(".com/") + 5);
-                s3Service.deleteFile(key);
-            } catch (Exception e) {
-                System.out.println("기존 이미지 삭제 실패 (무시): " + e.getMessage());
-            }
-        }
+        String prefix = "profile/" + memberId + "/";
+        s3Service.deleteFolder(prefix);
+        member.setImage(null);
+        memberRepository.save(member);
     }
 
 
