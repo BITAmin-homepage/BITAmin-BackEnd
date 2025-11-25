@@ -3,11 +3,13 @@ package BITAmin.BE.project.service;
 
 import BITAmin.BE.global.exception.CustomException;
 import BITAmin.BE.global.exception.ErrorCode;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -26,13 +28,18 @@ public class S3Service {
     public String uploadFile(MultipartFile file, String folder) {
         try {
             String fileName = folder + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(file.getSize());
+            metadata.setContentType(file.getContentType());
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(fileName)
                     .contentType(file.getContentType())
                     .build();
+
             s3Client.putObject(putObjectRequest,
-                    software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes()));
+                    RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
             return "https://" + bucketName + ".s3.amazonaws.com/" + fileName;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.FILE_UPLOAD_FAILED);

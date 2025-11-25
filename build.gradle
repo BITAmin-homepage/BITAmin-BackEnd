@@ -30,6 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.694'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 	//Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
