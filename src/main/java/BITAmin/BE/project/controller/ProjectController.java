@@ -35,18 +35,21 @@ public class ProjectController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("type") String type
+            @RequestParam("type") String type,
+            @RequestParam("projectId") Long projectId
     ) {
         try {
             long sizeMB = file.getSize() / (1024 * 1024);
             if (sizeMB <= 10) {
                 String pptxUrl = s3Service.uploadFile(file, type);
+                projectService.saveUrl(type, pptxUrl, projectId);
                 return ResponseEntity.ok(pptxUrl);
             }
             File pdfFile = libreOfficeService.convertToPdf(file);
             System.out.println("pdfFile 이름: "+pdfFile.getName());
             String pdfUrl = s3Service.uploadPdf(pdfFile);
             libreOfficeService.cleanTempFiles(pdfFile);
+            projectService.saveUrl(type, pdfUrl, projectId);
             return ResponseEntity.ok(pdfUrl);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

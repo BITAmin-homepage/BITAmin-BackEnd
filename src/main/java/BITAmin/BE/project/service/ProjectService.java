@@ -61,7 +61,10 @@ public class ProjectService {
             project.setThumbnail(url);
         } else if ("ppt".equals(folderType)) {
             project.setPpt(url);
+        } else if ("pdf".equals(folderType)) {
+            project.setPpt(url);
         }
+
         projectRepository.save(project);
     }
     public List<ProjectThumbnail> getAllProjects() {
