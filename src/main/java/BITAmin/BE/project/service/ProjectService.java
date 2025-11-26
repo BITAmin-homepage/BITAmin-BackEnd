@@ -57,12 +57,16 @@ public class ProjectService {
         String[] typeParts = type.split("/");
         String folderType = typeParts[0];
 
-        if ("thumbnail".equals(folderType)) {
-            project.setThumbnail(url);
-        } else if ("ppt".equals(folderType)) {
-            project.setPpt(url);
-        } else if ("pdf".equals(folderType)) {
-            project.setPpt(url);
+        System.out.println("[saveUrl] type = " + type);
+        System.out.println("[saveUrl] folderType = " + folderType);
+
+        switch (folderType) {
+            case "thumbnail" -> project.setThumbnail(url);
+            case "ppt" -> project.setPpt(url);
+            case "pdf" -> project.setPpt(url);
+            default -> {
+                throw new IllegalArgumentException("잘못된 type: " + folderType);
+            }
         }
 
         projectRepository.save(project);
