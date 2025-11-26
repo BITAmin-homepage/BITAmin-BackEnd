@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class LibreOfficeService {
@@ -32,13 +33,17 @@ public class LibreOfficeService {
             }
         }
 
-        int exitCode = process.waitFor();
+        boolean finished = process.waitFor(30, TimeUnit.SECONDS);
+        if (!finished) {
+            process.destroyForcibly();
+            throw new RuntimeException("LibreOffice 변환이 시간 초과로 실패했습니다.");
+        }
+        int exitCode = process.exitValue();
         if (exitCode != 0) {
             throw new RuntimeException("LibreOffice 변환 실패. exit code = " + exitCode);
         }
         File generatedPdf = new File(tempPptx.getParent(),
                 tempPptx.getName().replace(".pptx", ".pdf"));
-
         if (generatedPdf.exists()) {
             generatedPdf.renameTo(outputPdf);
         }
