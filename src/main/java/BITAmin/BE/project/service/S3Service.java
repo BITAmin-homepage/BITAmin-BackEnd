@@ -27,6 +27,7 @@ public class S3Service {
 
 
     public String uploadFile(MultipartFile file, String folder) {
+
         try {
             String fileName = folder + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
             PutObjectRequest request = PutObjectRequest.builder()

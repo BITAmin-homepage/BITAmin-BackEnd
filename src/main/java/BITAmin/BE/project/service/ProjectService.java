@@ -52,6 +52,7 @@ public class ProjectService {
         return new ProjectPpt(project.getPpt());
     }
     public void saveUrl(String type, String url, Long projectId) {
+        System.out.println(">> [uploadFile] type=" + type + ", projectId=" + projectId);
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new CustomException(ErrorCode.DB_NOT_FOUND));
         System.out.println("[saveUrl] type = " + type);
