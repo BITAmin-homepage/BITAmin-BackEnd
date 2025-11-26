@@ -35,8 +35,7 @@ public class ProjectController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("type") String type,
-            @RequestParam("projectId") Long projectId
+            @RequestParam("type") String type
     ) {
         try {
             long sizeMB = file.getSize() / (1024 * 1024);
