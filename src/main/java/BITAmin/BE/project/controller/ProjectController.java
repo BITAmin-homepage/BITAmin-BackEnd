@@ -47,7 +47,7 @@ public class ProjectController {
                 return ResponseEntity.ok(pptxUrl);
             }
             File pdfFile = libreOfficeService.convertToPdf(file);
-            System.out.println("pdfFile 이름: "+pdfFile.getName());
+            System.out.println("pdfFile 이름: " + pdfFile.getName());
             String pdfUrl = s3Service.uploadPdf(pdfFile);
             libreOfficeService.cleanTempFiles(pdfFile);
             projectService.saveUrl(type, pdfUrl, projectId);
@@ -57,7 +57,6 @@ public class ProjectController {
                     .body("업로드 실패: " + e.getMessage());
         }
     }
-
     @DeleteMapping
     public ResponseEntity<String> deleteProject(
             @RequestParam String projectTitle) {
