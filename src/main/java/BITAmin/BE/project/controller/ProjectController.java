@@ -39,6 +39,7 @@ public class ProjectController {
             @RequestParam("projectId") Long projectId
     ) {
         try {
+            System.out.println("[projectId] 확인"+projectId);
             long sizeMB = file.getSize() / (1024 * 1024);
             if (sizeMB <= 10) {
                 String pptxUrl = s3Service.uploadFile(file, type);

@@ -54,6 +54,7 @@ public class ProjectService {
     public void saveUrl(String type, String url, Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new CustomException(ErrorCode.DB_NOT_FOUND));
+        System.out.println("[projectId 확인인]"+projectId);
         String[] typeParts = type.split("/");
         String folderType = typeParts[0];
 
