@@ -54,20 +54,19 @@ public class ProjectService {
     public void saveUrl(String type, String url, Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new CustomException(ErrorCode.DB_NOT_FOUND));
-        System.out.println("[projectId 확인인]"+projectId);
-        String[] typeParts = type.split("/");
-        String folderType = typeParts[0];
-
         System.out.println("[saveUrl] type = " + type);
-        System.out.println("[saveUrl] folderType = " + folderType);
-
-        switch (folderType) {
-            case "thumbnail" -> project.setThumbnail(url);
-            case "ppt" -> project.setPpt(url);
-            case "pdf" -> project.setPpt(url);
-            default -> {
-                throw new IllegalArgumentException("잘못된 type: " + folderType);
-            }
+        // MIME 타입도 처리
+        if (type.startsWith("thumbnail")) {
+            project.setThumbnail(url);
+        } else if (type.startsWith("ppt") ||
+                type.equals("application/vnd.ms-powerpoint") ||
+                type.equals("application/vnd.openxmlformats-officedocument.presentationml.presentation")) {
+            project.setPpt(url);
+        } else if (type.startsWith("pdf") ||
+                type.equals("application/pdf")) {
+            project.setPpt(url);
+        } else {
+            throw new IllegalArgumentException("지원하지 않는 type: " + type);
         }
 
         projectRepository.save(project);
