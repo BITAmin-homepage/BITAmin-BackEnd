@@ -84,7 +84,9 @@ public class S3Service {
                     .key(key)
                     .contentType("application/pdf")
                     .build();
+            log.info("S3 업로드 시작");
             s3Client.putObject(request, RequestBody.fromFile(file));
+            log.info("S3 업로드 완료");
             return "https://" + bucketName + ".s3.amazonaws.com/" + key;
         } catch (Exception e) {
             throw new CustomException(ErrorCode.FILE_UPLOAD_FAILED);
