@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
+    List<Member> findByStatus(Status status);
     Optional<Member> findByEmail(String email);
     Optional<Member> findByUsername(String username);
     Optional<Member> findByMemberId(Long memberId);

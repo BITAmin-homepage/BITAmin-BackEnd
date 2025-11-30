@@ -35,7 +35,7 @@ public class MemberService {
     }
     public List<MemberIntro> getMemberIntroduce() {
         // 일반 Member에서
-        List<MemberIntro> normalMembers = memberRepository.findAll().stream()
+        List<MemberIntro> normalMembers = memberRepository.findByStatus(Status.APPROVED).stream()
                 .map(member -> new MemberIntro(
                         member.getCohort(),
                         member.getName(),
