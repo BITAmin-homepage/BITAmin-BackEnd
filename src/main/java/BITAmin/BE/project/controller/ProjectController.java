@@ -41,7 +41,7 @@ public class ProjectController {
         try {
             System.out.println(">> [uploadFile] type=" + type + ", projectId=" + projectId);
             long sizeMB = file.getSize() / (1024 * 1024);
-            if (sizeMB <= 10) {
+            if (sizeMB <= 20) {
                 String pptxUrl = s3Service.uploadFile(file, type);
                 projectService.saveUrl(type, pptxUrl, projectId);
                 return ResponseEntity.ok(pptxUrl);
