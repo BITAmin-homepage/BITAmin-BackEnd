@@ -7,7 +7,7 @@ export const options = {
 };
 
 export default function () {
-  const res = http.get('https://localhost:8080/api/members/all');
+  const res = http.get('https://api.bitamin.ai.kr/api/members/all');
 
   check(res, {
     'status is 200': (r) => r.status === 200,

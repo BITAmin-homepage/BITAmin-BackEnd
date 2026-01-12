@@ -1,9 +1,6 @@
 package BITAmin.BE.member.controller;
 
 import BITAmin.BE.global.dto.ApiResponse;
-import BITAmin.BE.global.exception.CustomException;
-import BITAmin.BE.global.exception.ErrorCode;
-import BITAmin.BE.member.dto.auth.SignupReqeustDto;
 import BITAmin.BE.member.dto.member.*;
 import BITAmin.BE.member.entity.Member;
 import BITAmin.BE.member.enums.Status;
@@ -12,15 +9,14 @@ import BITAmin.BE.member.service.MemberService;
 import BITAmin.BE.project.service.S3Service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
@@ -37,7 +33,10 @@ public class MemberController {
     }
     @GetMapping("/all")
     public ResponseEntity<ApiResponse<List<MemberIntro>>> memberIntroduce(){
+        long t0 = System.nanoTime();
         List<MemberIntro> dto = memberService.getMemberIntroduce();
+        long t1 = System.nanoTime();
+        log.info("members/all serviceTimeMs={}", (t1 - t0) / 1_000_000);
         return ResponseEntity.ok(ApiResponse.success("모든 회원 정보 조회 성공", dto));
     }
 
