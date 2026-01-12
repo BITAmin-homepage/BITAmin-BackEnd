@@ -34,36 +34,13 @@ public class MemberService {
         return MemberInfoDto.fromEntity(member);
     }
     public List<MemberIntro> getMemberIntroduce() {
-        // 일반 Member에서
-        List<MemberIntro> normalMembers = memberRepository.findByStatus(Status.APPROVED).stream()
-                .map(member -> new MemberIntro(
-                        member.getCohort(),
-                        member.getName(),
-                        member.getLink1(),
-                        member.getLink2(),
-                        member.getDepart(),
-                        member.getImage()
-                ))
-                .collect(Collectors.toList());
+        List<MemberIntro> normal = memberRepository.findIntroByStatus(Status.APPROVED);
+        List<MemberIntro> aged = agedMemberRepository.findAllIntro();
 
-        // AgedMember에서
-        List<MemberIntro> agedMembers = agedMemberRepository.findAll().stream()
-                .map(aged -> new MemberIntro(
-                        aged.getCohort(),
-                        aged.getName(),
-                        aged.getLink1(),
-                        aged.getLink2(),
-                        aged.getDepart(),
-                        aged.getImage()
-                ))
-                .collect(Collectors.toList());
-
-        // 두 리스트 합치기
-        List<MemberIntro> allMembers = new ArrayList<>();
-        allMembers.addAll(normalMembers);
-        allMembers.addAll(agedMembers);
-
-        return allMembers;
+        List<MemberIntro> all = new ArrayList<>(normal.size() + aged.size());
+        all.addAll(normal);
+        all.addAll(aged);
+        return all;
     }
     public void updateMember(Long memberId, UpdateMemberRequestDto dto){
         Member member = memberRepository.findByMemberId(memberId)
