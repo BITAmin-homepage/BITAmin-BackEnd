@@ -2,12 +2,9 @@ package BITAmin.BE.member.controller;
 
 import BITAmin.BE.global.dto.ApiResponse;
 import BITAmin.BE.member.dto.member.*;
-import BITAmin.BE.member.entity.Member;
 import BITAmin.BE.member.enums.Status;
-import BITAmin.BE.member.service.AuthService;
 import BITAmin.BE.member.service.MemberService;
 import BITAmin.BE.project.service.S3Service;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
