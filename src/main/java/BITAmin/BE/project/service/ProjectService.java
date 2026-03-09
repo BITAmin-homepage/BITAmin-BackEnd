@@ -11,6 +11,7 @@ import BITAmin.BE.project.entity.Project;
 import BITAmin.BE.project.enums.Award;
 import BITAmin.BE.project.repository.ProjectRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -73,7 +74,7 @@ public class ProjectService {
         projectRepository.save(project);
     }
     public List<ProjectThumbnail> getAllProjects() {
-        List<Project> projects = projectRepository.findAll();
+        List<Project> projects = projectRepository.findAll(Sort.by(Sort.Direction.DESC, "projectId"));
 
         // Entity → DTO 변환
         return projects.stream()
