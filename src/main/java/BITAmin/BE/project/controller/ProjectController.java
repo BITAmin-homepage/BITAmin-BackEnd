@@ -7,10 +7,8 @@ import BITAmin.BE.project.dto.ProjectDetail;
 import BITAmin.BE.project.dto.ProjectInfoDto;
 import BITAmin.BE.project.dto.ProjectPpt;
 import BITAmin.BE.project.dto.ProjectThumbnail;
-import BITAmin.BE.project.entity.Project;
-import BITAmin.BE.project.enums.Award;
 import BITAmin.BE.project.repository.ProjectRepository;
-import BITAmin.BE.project.service.LibreOfficeService;
+import BITAmin.BE.project.service.PdfGhostscriptService;
 import BITAmin.BE.project.service.ProjectService;
 import BITAmin.BE.project.service.S3Service;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +19,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/project")
 public class ProjectController {
+
+    private static final long PPT_PDF_MAX_BYTES = 10L * 1024 * 1024;
+
     private final S3Service s3Service;
     private final ProjectService projectService;
     private final ProjectRepository projectRepository;
-    private final LibreOfficeService libreOfficeService;
+    private final PdfGhostscriptService pdfGhostscriptService;
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(
@@ -40,23 +40,55 @@ public class ProjectController {
     ) {
         try {
             System.out.println(">> [uploadFile] type=" + type + ", projectId=" + projectId);
+            if (type != null && type.startsWith("thumbnail")) {
+                String url = s3Service.uploadFile(file, type);
+                projectService.saveUrl(type, url, projectId);
+                return ResponseEntity.ok(url);
+            }
             long sizeMB = file.getSize() / (1024 * 1024);
             if (sizeMB <= 10) {
-                String pptxUrl = s3Service.uploadFile(file, type);
-                projectService.saveUrl(type, pptxUrl, projectId);
-                return ResponseEntity.ok(pptxUrl);
+                String url = s3Service.uploadFile(file, type);
+                projectService.saveUrl(type, url, projectId);
+                return ResponseEntity.ok(url);
             }
-            File pdfFile = libreOfficeService.convertToPdf(file);
-            System.out.println("pdfFile 이름: " + pdfFile.getName());
-            String pdfUrl = s3Service.uploadPdf(pdfFile);
-            libreOfficeService.cleanTempFiles(pdfFile);
-            projectService.saveUrl(type, pdfUrl, projectId);
-            return ResponseEntity.ok(pdfUrl);
+            if (isPdfUpload(file)) {
+                File tempPdf = File.createTempFile("upload-", ".pdf");
+                File toUpload = null;
+                try {
+                    file.transferTo(tempPdf);
+                    toUpload = pdfGhostscriptService.shrinkPdfIfOverLimit(tempPdf, PPT_PDF_MAX_BYTES);
+                    String pdfUrl = s3Service.uploadPdf(toUpload);
+                    projectService.saveUrl(type, pdfUrl, projectId);
+                    return ResponseEntity.ok(pdfUrl);
+                } finally {
+                    if (toUpload != null && toUpload.exists()) {
+                        //noinspection ResultOfMethodCallIgnored
+                        toUpload.delete();
+                    }
+                    if (tempPdf.exists()) {
+                        //noinspection ResultOfMethodCallIgnored
+                        tempPdf.delete();
+                    }
+                }
+            }
+            String largeUrl = s3Service.uploadFile(file, type);
+            projectService.saveUrl(type, largeUrl, projectId);
+            return ResponseEntity.ok(largeUrl);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("업로드 실패: " + e.getMessage());
         }
     }
+
+    private static boolean isPdfUpload(MultipartFile file) {
+        String ct = file.getContentType();
+        if (ct != null && ct.equalsIgnoreCase("application/pdf")) {
+            return true;
+        }
+        String name = file.getOriginalFilename();
+        return name != null && name.toLowerCase().endsWith(".pdf");
+    }
+
     @DeleteMapping
     public ResponseEntity<String> deleteProject(
             @RequestParam String projectTitle) {
